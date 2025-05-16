@@ -1,0 +1,38 @@
+.address-form {
+    width: 400px;
+    margin: 60px auto;
+    text-align: center;
+}
+
+.address-form h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.address-form label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.address-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.address-form button {
+    width: 100%;
+    background-color: #ef6c60;
+    color: white;
+    padding: 10px 30px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}

@@ -1,0 +1,122 @@
+.sell-container {
+    width: 60%;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+}
+
+.sell-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.image-upload .upload-box {
+    border: 2px dashed #ccc;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 12px;
+    margin-top: 0.5rem;
+    position: relative;
+}
+
+.hidden-input {
+    display: none;
+}
+
+.upload-label {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background-color: #f36c6c;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.category-label {
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin: 0.3rem;
+}
+
+.category-label input[type="checkbox"] {
+    display: none;
+}
+
+.category-label span {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid #f36c6c;
+    background-color: #ffecec;
+    border-radius: 16px;
+    color: #f36c6c;
+    transition: all 0.2s;
+}
+
+.category-label input[type="checkbox"]:checked+span {
+    background-color: #f36c6c;
+    color: #fff;
+    border-color: #f36c6c;
+}
+
+.form-section {
+    margin-bottom: 1.5rem;
+}
+
+.form-section label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.price-input-wrapper {
+    position: relative;
+}
+
+.yen-symbol {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none;
+    font-size: 1rem;
+}
+
+.price-input {
+    padding-left: 1.5rem;
+}
+
+.submit-button {
+    background-color: #f36c6c;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+}
