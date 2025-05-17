@@ -1,49 +1,69 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/register.css') }}">
+<link rel="stylesheet" href="{{ asset('css/auth/register.css') }}">
 @endsection
 
 @section('content')
-    <h2>会員登録</h2>
-
-    <form method="POST" action="{{ route('register') }}" class="register-form">
-        @csrf
-
-        <div>
-            <label for="name">ユーザー名</label>
-            <input type="text" id="name" name="name" value="{{ old('name') }}">
+<div class="register-page-container"> {{-- ページ全体のコンテナ --}}
+    <div class="register-form-wrapper"> {{-- フォーム入力欄のラッパー --}}
+        <div class="register-header">
+            <h2>会員登録</h2>
         </div>
-        @error('name')
-            <p class="error">{{ $message }}</p>
-        @enderror
 
-        <div>
-            <label for="email">メールアドレス</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}">
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+
+            <div class="form-group">
+                <label for="name">名前</label>
+                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" autofocus>
+                @error('name')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="email">メールアドレス</label>
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}">
+                @error('email')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password">
+                @error('password')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="password-confirm">パスワード確認</label>
+                <input id="password-confirm" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation">
+                @error('password_confirmation')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn-register">
+                    登録する
+                </button>
+            </div>
+        </form>
+
+        <div class="login-link">
+            <a href="{{ route('login') }}">ログインはこちら</a>
         </div>
-        @error('email')
-            <p class="error">{{ $message }}</p>
-        @enderror
-
-        <div>
-            <label for="password">パスワード</label>
-            <input type="password" id="password" name="password">
-        </div>
-        @error('password')
-            <p class="error">{{ $message }}</p>
-        @enderror
-
-        <div>
-            <label for="password_confirmation">確認用パスワード</label>
-            <input type="password" id="password_confirmation" name="password_confirmation">
-        </div>
-        @error('password_confirmation')
-            <p class="error">{{ $message }}</p>
-        @enderror
-
-        <button type="submit" class="register-button">登録する</button>
-    </form>
-
-    <a href="{{ route('login') }}" class="login-link">ログインはこちら</a>
+    </div>
+</div>
 @endsection

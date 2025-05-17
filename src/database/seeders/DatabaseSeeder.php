@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\WeightLog;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,8 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-            $this->call(UsersTableSeeder::class);
-            $this->call(CategoriesTableSeeder::class);
-            $this->call(ProductsTableSeeder::class);
+        $this->call([
+            UserSeeder::class,
+            AttendanceSeeder::class,
+        ]);
     }
 }

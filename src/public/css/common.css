@@ -1,107 +1,25 @@
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     padding: 8px 24px;
     background-color: #000;
     color: white;
-    flex-wrap: wrap;
     height: auto;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 8px;
 }
 
 .logo-link {
     text-decoration: none;
     margin: 0px;
+    display: inline-block;
 }
 
 .logo-link img {
-    width: 250px;
-}
-
-.header-nav {
-    display: flex;
-    align-items: center;
-    margin-left: 16px;
-    gap: 16px;
-    flex: 1;
-    flex-wrap: wrap;
-}
-
-.search-form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 2;
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    gap: 8px;
-}
-
-.search-input {
-    flex: 1;
-    padding: 10px 14px;
-    border-radius: 6px;
-    border: none;
-    font-size: 16px;
-    width: 100%;
-}
-
-.search-button {
-    padding: 10px 16px;
-    font-size: 16px;
-    border: none;
-    background-color: white;
-    color: black;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.header-nav button:hover {
-    background-color: #ddd;
-}
-
-.header-nav a {
-    font-size: 14px;
-    padding: 6px 10px;
-    color: #fff;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.2s;
-}
-
-.header-nav a:hover,
-.logo-link:hover {
-    text-decoration: none;
-}
-
-
-@media screen and (max-width: 768px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .header-nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        width: 100%;
-    }
-
-    .search-input {
-        width: 100%;
-    }
-
-    .header-nav form {
-        width: 100%;
-    }
+    width: 200px;
+    vertical-align: middle;
 }

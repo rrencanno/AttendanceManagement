@@ -2,32 +2,68 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail; // メール認証を使う場合
+// use Laravel\Sanctum\HasApiTokens; // API認証を使う場合
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash; // Hashファサードをuseする
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password', 'image_url', 'post_code', 'address', 'building_name'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'is_admin',
+    ];
 
-    public function products() {
-        return $this->hasMany(Product::class);
-    }
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-    public function favorites()
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime', // メール認証を使う場合
+        'is_admin' => 'boolean',
+    ];
+
+    /**
+     * パスワードを自動的にハッシュ化するミューテータ
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setPasswordAttribute($value)
     {
-        return $this->belongsToMany(Product::class, 'favorites')->withTimestamps();
+        $this->attributes['password'] = Hash::make($value);
     }
 
-    public function purchasedProducts()
+    // リレーションシップ
+    public function attendances()
     {
-        return $this->belongsToMany(Product::class, 'purchases');
+        return $this->hasMany(Attendance::class);
     }
 
-    public function shippingAddress()
-{
-    return $this->hasOne(ShippingAddress::class);
-}
+    public function appliedCorrectionRequests()
+    {
+        return $this->hasMany(AttendanceCorrectionRequest::class, 'user_id');
+    }
 }
