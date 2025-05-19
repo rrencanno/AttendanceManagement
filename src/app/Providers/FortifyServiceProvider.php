@@ -6,16 +6,9 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
-use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\LoginViewResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -34,17 +27,30 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::createUsersUsing(CreateNewUser::class);
 
-        Fortify::authenticateUsing(function (LoginRequest $request) {
-            $credentials = $request->only('email', 'password');
-            
-            if (Auth::attempt($credentials)) {
-                return Auth::user();
-            }
-            
-            return null;
+        Fortify::loginView(function () {
+            return view('auth.login');
         });
 
-        // ログイン後のリダイレクト先を指定
-        Fortify::redirects('login', '/weight_logs');
+        // 他のビューの定義 (登録画面など) も同様に設定できます
+        Fortify::registerView(function () {
+            return view('auth.register');
+        });
+
+        // メール認証が必要な場合の通知ビュー
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify-email'); // 後で作成するビュー
+        });
+
+
+        // 他のFortifyアクションのバインドやビュー設定...
+        // Fortify::requestPasswordResetLinkView(...);
+        // Fortify::resetPasswordView(...);
+        // Fortify::confirmPasswordView(...);
+        // Fortify::twoFactorChallengeView(...);
+
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\LogoutResponse::class,
+            \App\Http\Responses\CustomLogoutResponse::class // 後で作成します
+        );
     }
 }

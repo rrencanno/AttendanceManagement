@@ -75,7 +75,7 @@ return [
     */
 
     // 'home' => RouteServiceProvider::HOME,
-    'home' => '/weight_logs',
+    'home' => '/attendances',
 
     /*
     |--------------------------------------------------------------------------
@@ -156,11 +156,6 @@ return [
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
-    ],
-
-    /*リダイレクト先を直接設定*/
-    'redirects' => [
-        'login' => '/login',
     ],
 
 ];

@@ -1,11 +1,17 @@
 header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 8px 24px;
     background-color: #000;
     color: white;
-    height: auto;
+    padding: 0 24px;
+    /* 上下のpaddingを0にし、高さをheader-contentに依存させる */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    /* ロゴとナビを両端に配置 */
+    align-items: center;
+    height: 60px;
+    /* ヘッダーの高さを固定 (お好みで調整) */
 }
 
 .logo {
@@ -15,11 +21,52 @@ header {
 
 .logo-link {
     text-decoration: none;
-    margin: 0px;
     display: inline-block;
+    /* vertical-alignを効かせるため */
 }
 
 .logo-link img {
-    width: 200px;
+    width: 180px;
     vertical-align: middle;
+}
+
+/* ログインユーザー向けナビゲーション */
+.header-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-nav .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.header-nav .nav-link:hover {
+    background-color: #333;
+}
+
+.header-nav .btn-logout {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.header-nav .btn-logout:hover {
+    background-color: #333;
 }

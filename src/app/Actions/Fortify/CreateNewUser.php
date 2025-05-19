@@ -5,7 +5,7 @@ namespace App\Actions\Fortify;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-// use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class CreateNewUser implements CreatesNewUsers
@@ -15,9 +15,10 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Validate and create a newly registered user.
      *
-     * @param  array<string, string>  $input
+     * @param  array  $input
+     * @return \App\Models\User
      */
-    public function create(array $input): User
+    public function create(array $input)
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
@@ -26,25 +27,16 @@ class CreateNewUser implements CreatesNewUsers
                 'string',
                 'email',
                 'max:255',
-                'unique:users',
-                // Rule::unique(User::class),
+                Rule::unique(User::class),
             ],
-            'password' => ['required', 'string', 'confirmed'],
+            'password' => $this->passwordRules(),
         ])->validate();
 
-        $user = User::create([
+        return User::create([ // ← この行でユーザーを作成し、そのインスタンスを返しているか確認
             'name' => $input['name'],
             'email' => $input['email'],
-            'password' => Hash::make($input['password']),
+            'password' => $input['password'], // Userモデルのミューテータでハッシュ化される
+            // 'is_admin' => false, // ここで is_admin を設定することも可能 (デフォルトはマイグレーションで設定)
         ]);
-
-        // return redirect('/login');
-
-        // return User::create([
-        //     'name' => $input['name'],
-        //     'email' => $input['email'],
-        //     'password' => Hash::make($input['password']),
-        //     'is_admin' => $input['is_admin'] ?? 1, //全てのユーザーを管理者にする
-        // ]);
     }
 }

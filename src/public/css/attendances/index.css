@@ -1,0 +1,126 @@
+body {
+    background-color: #f0f2f5;
+    /* 画像の背景色 */
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.attendance-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px);
+    /* ヘッダーの高さを引く (common.cssの.header-content heightに合わせる) */
+    padding: 20px;
+    text-align: center;
+}
+
+.attendance-status-badge {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 8px 16px;
+    border-radius: 16px;
+    /* 角丸を大きくしてカプセル型に */
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.date-display {
+    font-size: 20px;
+    /* 少し大きく */
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.time-display {
+    font-size: 72px;
+    /* 画像のように大きく */
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 30px;
+    line-height: 1;
+    /* 行間を詰める */
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    /* ボタン間のスペース */
+}
+
+.btn-clock-in,
+.btn-clock-out {
+    /* 退勤ボタンは出勤ボタンと同じスタイル */
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    min-width: 150px;
+}
+
+.btn-break-start,
+/* 休憩開始ボタンのスタイル */
+.btn-break-end {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    min-width: 150px;
+}
+
+.btn-clock-in:hover,
+.btn-clock-out:hover {
+    background-color: #333;
+}
+
+.btn-break-start:hover,
+.btn-break-end:hover {
+    background-color: #f0f0f0;
+    border-color: #bbb;
+}
+
+.work-finished-message {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* アラートメッセージ用 (汎用的なものがあればそちらを使用) */
+.alert {
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    width: 100%;
+    max-width: 500px;
+    /* アラートの最大幅 */
+}
+
+.alert-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+
+.alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
