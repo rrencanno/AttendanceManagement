@@ -1,0 +1,96 @@
+.login-form-container {
+    /* login.blade.php で <h1 class="login-title"> と <form> を囲む新しいdiv */
+    width: 100%;
+    max-width: 400px;
+    /* フォームの幅を調整 */
+    margin: 50px auto;
+    /* 上下にマージン、左右中央寄せ */
+    padding: 30px;
+    background-color: #fff;
+    /* フォーム部分の背景を白に */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    /* タイトルなどを中央寄せ */
+}
+
+
+.login-title {
+    /* これは変更なしでOK */
+    font-size: 1.75em;
+    font-weight: bold;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.login-form {
+    /* これは変更なしでOK */
+    text-align: left;
+}
+
+.form-group {
+    /* これは変更なしでOK */
+    margin-bottom: 20px;
+}
+
+.form-label {
+    /* これは変更なしでOK */
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.form-input {
+    /* これは変更なしでOK */
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.form-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-login:hover {
+    background-color: #333;
+}
+
+/* エラーメッセージ用 */
+.alert {
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-danger ul {
+    margin: 0;
+    padding-left: 20px;
+}

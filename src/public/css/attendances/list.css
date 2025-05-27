@@ -1,0 +1,98 @@
+.attendance-list-container {
+    width: 90%;
+    max-width: 1000px; /* 画像の幅に合わせる */
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f9f9f9; /* 背景色を少し明るく */
+    border-radius: 8px;
+    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */ /* 必要であれば影 */
+}
+
+.month-navigation {
+    display: flex;
+    justify-content: center; /* 中央寄せ */
+    align-items: center;
+    margin-bottom: 25px;
+    background-color: #fff; /* ナビゲーション背景 */
+    padding: 15px 0; /* 上下パディング */
+    border: 1px solid #ddd; /* 枠線 */
+    border-radius: 6px;
+}
+
+.current-month {
+    font-size: 1.4em; /* 月の表示を大きく */
+    font-weight: bold;
+    margin: 0 30px; /* 前後ボタンとの間隔 */
+    color: #333;
+}
+
+.month-nav-button {
+    background-color: transparent; /* ボタン背景なし */
+    color: #007bff; /* ボタン文字色 (青系) */
+    border: none;
+    padding: 8px 15px;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    display: inline-flex; /* アイコンとテキストを横並び */
+    align-items: center;
+    gap: 5px; /* アイコンとテキストの間隔 */
+}
+.month-nav-button:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+.month-nav-button i {
+    font-size: 0.9em; /* アイコンサイズ調整 */
+}
+
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #ddd; /* テーブル全体の枠線 */
+}
+
+.attendance-table th,
+.attendance-table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 15px; /* パディングを少し広めに */
+    text-align: center;
+    font-size: 0.95em;
+}
+
+.attendance-table th {
+    background-color: #f2f2f2; /* ヘッダー背景色 */
+    font-weight: 600; /* ヘッダー文字太さ */
+    color: #333;
+}
+
+.attendance-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* 偶数行の背景色 */
+}
+.attendance-table tbody tr:hover {
+    background-color: #f1f1f1; /* ホバー時の背景色 */
+}
+
+.btn-detail {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #5cb85c; /* 詳細ボタンの色 (緑系) */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.btn-detail:hover {
+    background-color: #4cae4c;
+}
+
+.no-records {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-style: italic;
+}

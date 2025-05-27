@@ -1,0 +1,177 @@
+.admin-attendance-list-container {
+    width: 90%;
+    max-width: 1100px;
+    /* 少し広めでも良いかも */
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f0f2f5;
+    /* 背景色 */
+}
+
+.page-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 25px;
+    padding-left: 10px;
+    border-left: 5px solid #333;
+}
+
+.date-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    background-color: #fff;
+    padding: 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.date-picker-input {
+    font-size: 1.2em;
+    /* 日付表示を大きく */
+    font-weight: bold;
+    margin: 0 20px;
+    color: #333;
+    border: none;
+    text-align: center;
+    padding: 5px 10px;
+    background-color: transparent;
+    cursor: pointer;
+    /* クリックできることを示す */
+    width: 150px;
+    /* 幅を調整 */
+}
+
+.date-picker-input:focus {
+    outline: none;
+}
+
+.date-nav-button {
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    padding: 8px 15px;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.date-nav-button:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.date-nav-button i {
+    font-size: 0.9em;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.attendance-table th,
+.attendance-table td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 15px;
+    text-align: center;
+    font-size: 0.95em;
+}
+
+.attendance-table th:first-child,
+/* 名前列は左寄せ */
+.attendance-table td:first-child {
+    text-align: left;
+}
+
+
+.attendance-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.attendance-table thead th:first-child {
+    border-top-left-radius: 6px;
+}
+
+.attendance-table thead th:last-child {
+    border-top-right-radius: 6px;
+}
+
+.attendance-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn-detail {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #17a2b8;
+    /* 詳細ボタンの色 (情報系) */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.btn-detail:hover {
+    background-color: #138496;
+}
+
+.no-records {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+    font-style: italic;
+}
+
+.pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ページネーションのスタイルは admin/common.css や app.blade.php 側で共通化しても良い */
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
+
+.page-item .page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #dee2e6;
+}

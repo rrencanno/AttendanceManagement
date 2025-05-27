@@ -23,8 +23,8 @@
             <nav class="header-nav">
                 <ul>
                     <li><a href="{{ route('attendances.index') }}" class="nav-link">勤怠</a></li>
-                    <li><a href="{{ route('attendances.list') }}" class="nav-link">勤怠一覧</a></li> {{-- 仮のルート名 --}}
-                    <li><a href="{{ route('applications.index') }}" class="nav-link">申請</a></li> {{-- 仮のルート名 --}}
+                    <li><a href="{{ route('attendances.list') }}" class="nav-link">勤怠一覧</a></li>
+                    <li><a href="{{ route('correction_requests.index') }}" class="nav-link">申請</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

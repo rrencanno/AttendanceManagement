@@ -1,0 +1,174 @@
+.admin-correction-request-list-container {
+    /* クラス名変更 */
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+.page-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 25px;
+    padding-left: 10px;
+    border-left: 5px solid #333;
+}
+
+.tabs-container {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #555;
+    font-size: 1em;
+    font-weight: 500;
+    border: none;
+    background-color: transparent;
+    margin-right: 5px;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-bottom-color 0.2s;
+}
+
+.tab-button:hover {
+    color: #000;
+}
+
+.tab-button.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+    font-weight: bold;
+}
+
+.request-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.request-table th,
+.request-table td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 0.95em;
+    vertical-align: middle;
+}
+
+.request-table th:last-child,
+/* 詳細ボタン列は中央寄せ */
+.request-table td:last-child {
+    text-align: center;
+}
+
+
+.request-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.request-table thead th:first-child {
+    border-top-left-radius: 6px;
+}
+
+.request-table thead th:last-child {
+    border-top-right-radius: 6px;
+}
+
+
+.request-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.status-approved {
+    background-color: #28a745;
+}
+
+/* .status-rejected は不要 */
+
+
+.btn-detail {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.btn-detail:hover {
+    background-color: #0056b3;
+}
+
+.no-records {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+    font-style: italic;
+}
+
+.pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Pagination styles (前回と同様) */
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
+
+.page-item .page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #dee2e6;
+}

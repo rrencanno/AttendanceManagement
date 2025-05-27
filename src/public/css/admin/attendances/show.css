@@ -1,0 +1,201 @@
+.admin-attendance-detail-container {
+    width: 90%;
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+.page-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    padding-left: 10px;
+    border-left: 5px solid #333;
+}
+
+.detail-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 25px 30px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.item-label {
+    width: 120px;
+    font-weight: 500;
+    color: #555;
+    flex-shrink: 0;
+}
+
+.item-value {
+    flex-grow: 1;
+    color: #333;
+    font-size: 1em;
+}
+
+.item-value.time-inputs {
+    display: flex;
+    align-items: center;
+}
+
+.item-value input[type="time"],
+.item-value textarea {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95em;
+    background-color: #fff;
+}
+
+.item-value input[type="time"] {
+    width: 120px;
+}
+
+.item-value textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.time-separator {
+    margin: 0 10px;
+    color: #555;
+}
+
+.breaks-section .item-label {
+    align-self: flex-start;
+    padding-top: 4px;
+}
+
+.breaks-section .item-value {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#breakTimesContainerAdmin {
+    /* IDを変更 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.break-time-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.break-time-group input[type="time"] {
+    width: 110px;
+}
+
+.btn-add-break,
+/* このクラス名は共通でも良い */
+.btn-remove-break {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.btn-remove-break {
+    background-color: #dc3545;
+    margin-left: 5px;
+}
+
+.btn-add-break:hover,
+.btn-remove-break:hover {
+    opacity: 0.9;
+}
+
+
+.remarks-item .item-label {
+    align-self: flex-start;
+    padding-top: 8px;
+}
+
+.action-button-container {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.btn-submit-update {
+    /* ボタンのクラス名変更 */
+    background-color: #333;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-submit-update:hover {
+    background-color: #555;
+}
+
+.back-link-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 8px 20px;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.btn-back:hover {
+    background-color: #5a6268;
+}
+
+.alert {
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-danger ul {
+    margin: 0;
+    padding-left: 20px;
+}
