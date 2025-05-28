@@ -33,7 +33,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'メールアドレスまたはパスワードが正しくありません。',
+            'email' => 'ログイン情報が登録されていません',
         ])->onlyInput('email');
     }
 
@@ -42,7 +42,7 @@ class LoginController extends Controller
         Auth::logout(); // Auth::guard('admin') を削除
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        // 管理者ログイン画面にリダイレクトするか、一般のトップページにリダイレクトするか選択
+        
         return redirect()->route('admin.login.create');
     }
 }

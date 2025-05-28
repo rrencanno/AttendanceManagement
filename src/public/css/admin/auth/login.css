@@ -75,6 +75,17 @@
     background-color: #333;
 }
 
+.invalid-feedback {
+    display: block;
+    /* spanタグでも改行されるように */
+    width: 100%;
+    margin-top: .25rem;
+    font-size: .875em;
+    /* 少し小さめの文字 */
+    color: #dc3545;
+    /* エラーメッセージの文字色 (赤系) */
+}
+
 /* エラーメッセージ用 */
 .alert {
     padding: 10px 15px;
