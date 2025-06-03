@@ -23,7 +23,7 @@
         </div>
 
         {{-- MailHogへのリンク (開発用) --}}
-        @if(config('app.env') == 'local' && config('mail.host') == 'mailhog')
+        @if(config('app.env') == 'local')
         <div class="form-group mailhog-link-button">
             <a href="http://localhost:8025" target="_blank" class="btn btn-mailhog">認証はこちらから (MailHog)</a>
         </div>

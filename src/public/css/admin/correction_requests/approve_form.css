@@ -147,7 +147,7 @@
 }
 
 .back-link-container {
-    text-align: center;
+    text-align: right;
     /* 戻るボタンは中央のまま */
     margin-top: 15px;
 }

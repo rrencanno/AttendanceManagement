@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Laravel\Fortify\Rules\Password;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -32,11 +33,15 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([ // ← この行でユーザーを作成し、そのインスタンスを返しているか確認
+        return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'password' => $input['password'], // Userモデルのミューテータでハッシュ化される
-            // 'is_admin' => false, // ここで is_admin を設定することも可能 (デフォルトはマイグレーションで設定)
+            'password' => Hash::make($input['password']),
         ]);
+    }
+
+    protected function passwordRules()
+    {
+        return ['required', 'string', new Password, 'confirmed'];
     }
 }

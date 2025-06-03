@@ -26,23 +26,23 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(), // メール認証を使う場合は設定
-            'password' => 'password', // ミューテータでハッシュ化される想定
-            'is_admin' => false, // デフォルトは一般ユーザー
+            'email_verified_at' => null,
+            'password' => 'password',
+            'is_admin' => false,
             'remember_token' => Str::random(10),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function unverified()
+    * Indicate that the model's email address should be verified.
+    *
+    * @return \Illuminate\Database\Eloquent\Factories\Factory
+    */
+    public function verified()
     {
         return $this->state(function (array $attributes) {
             return [
-                'email_verified_at' => null,
+                'email_verified_at' => now(),
             ];
         });
     }

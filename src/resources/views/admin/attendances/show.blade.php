@@ -77,7 +77,7 @@
             <div class="detail-item remarks-item">
                 <span class="item-label">備考</span>
                 <div class="item-value">
-                    <textarea name="remarks" rows="3">{{ old('remarks', $attendance->remarks) }}</textarea>
+                    <textarea name="remarks" rows="3">{{ old('remarks', $attendance->note) }}</textarea>
                 </div>
             </div>
         </div>

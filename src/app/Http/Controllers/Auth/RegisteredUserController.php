@@ -7,7 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Fortify\Contracts\CreatesNewUsers; // Fortifyのユーザー作成契約
+use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class RegisteredUserController extends Controller
 {
@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.register'); // 作成するビューのパス
+        return view('auth.register');
     }
 
     /**

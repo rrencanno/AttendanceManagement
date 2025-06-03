@@ -7,12 +7,14 @@
 @section('content')
 <div class="attendance-container">
     <div class="attendance-status-badge">
-        @if($status == 'unstarted' || $status == 'finished_today')
+        @if($status == 'unstarted')
             勤務外
         @elseif($status == 'working')
-            勤務中
+            出勤中
         @elseif($status == 'on_break')
             休憩中
+        @elseif($status == 'finished_today')
+            退勤済
         @endif
     </div>
 

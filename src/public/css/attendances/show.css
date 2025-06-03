@@ -197,7 +197,7 @@
 
 /* 修正申請ボタンコンテナ */
 .action-button-container {
-    text-align: center;
+    text-align: right;
     margin-top: 30px;
     /* カードとの間隔 */
     margin-bottom: 20px;
@@ -227,7 +227,7 @@
 .correction-pending-message {
     color: red;
     font-weight: bold;
-    text-align: center;
+    text-align: right;
     padding: 10px;
     border-radius: 4px;
     /* 必要に応じて背景色や枠線を追加 */
@@ -237,7 +237,7 @@
 
 /* 戻るボタンコンテナ */
 .back-link-container {
-    text-align: center;
+    text-align: right;
     margin-top: 15px;
 }
 

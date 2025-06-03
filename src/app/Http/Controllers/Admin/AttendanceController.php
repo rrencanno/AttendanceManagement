@@ -59,7 +59,7 @@ class AttendanceController extends Controller
         $workDate = Carbon::parse($attendance->work_date);
         $attendance->clock_in_time = $request->input('clock_in_time') ? $workDate->copy()->setTimeFromTimeString($request->input('clock_in_time')) : null;
         $attendance->clock_out_time = $request->input('clock_out_time') ? $workDate->copy()->setTimeFromTimeString($request->input('clock_out_time')) : null;
-        $attendance->remarks = $request->input('remarks');
+        $attendance->note = $request->input('remarks');
         $attendance->save();
 
         // --- 休憩時間の更新 ---

@@ -142,35 +142,82 @@
     justify-content: center;
 }
 
-/* ページネーションのスタイルは admin/common.css や app.blade.php 側で共通化しても良い */
-.pagination {
+.pagination-container {
+    margin-top: 30px;
+    /* 上の要素との間隔 */
+    margin-bottom: 20px;
     display: flex;
-    padding-left: 0;
-    list-style: none;
-    border-radius: .25rem;
+    justify-content: center;
+    /* 中央寄せ */
+    align-items: center;
 }
 
-.page-item .page-link {
+/* Laravelデフォルトの ul.pagination へのスタイル */
+.pagination {
+    display: inline-flex;
+    /* アイテムを横並びにする */
+    list-style: none;
+    padding-left: 0;
+    border-radius: 0.375rem;
+    /* 全体の角丸 (お好みで) */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    /* 軽い影 (お好みで) */
+    overflow: hidden;
+    /* 角丸と影をうまく表示するため */
+}
+
+.page-item:first-child .page-link {
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+.page-item:last-child .page-link {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+.page-link {
     position: relative;
     display: block;
-    padding: .5rem .75rem;
+    padding: 0.65rem 0.95rem;
+    /* パディングを少し調整 */
     margin-left: -1px;
+    /* 枠線を重ねるため (Bootstrap風) */
     line-height: 1.25;
     color: #007bff;
+    /* リンクの色 (青系) */
     background-color: #fff;
+    /* 背景色 (白) */
     border: 1px solid #dee2e6;
+    /* 枠線の色 */
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.page-link:hover {
+    z-index: 2;
+    color: #0056b3;
+    /* ホバー時のリンク色 */
+    background-color: #e9ecef;
+    /* ホバー時の背景色 */
+    border-color: #dee2e6;
 }
 
 .page-item.active .page-link {
     z-index: 3;
     color: #fff;
+    /* アクティブなページの文字色 (白) */
     background-color: #007bff;
+    /* アクティブなページの背景色 (青系) */
     border-color: #007bff;
+    /* アクティブなページの枠線色 */
 }
 
 .page-item.disabled .page-link {
     color: #6c757d;
+    /* 無効なリンクの色 (グレー) */
     pointer-events: none;
+    /* クリック不可に */
     cursor: auto;
     background-color: #fff;
     border-color: #dee2e6;

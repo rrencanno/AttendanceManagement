@@ -136,7 +136,7 @@
 }
 
 .action-button-container {
-    text-align: center;
+    text-align: right;
     margin-top: 30px;
     margin-bottom: 20px;
 }
@@ -158,7 +158,7 @@
 }
 
 .back-link-container {
-    text-align: center;
+    text-align: right;
     margin-top: 15px;
 }
 
