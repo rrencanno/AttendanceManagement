@@ -154,35 +154,27 @@ class BreakTimeTest extends TestCase
     {
         ['user' => $user, 'attendance' => $attendance] = $this->createAndLoginClockedInUser();
 
+        // $attendance->work_date から日付部分のみを取得 (Carbonインスタンスであることを期待)
+        $workDateCarbon = Carbon::parse($attendance->work_date); // 一度Carbonインスタンスとして確実に扱う
+        $dateString = $workDateCarbon->toDateString(); // YYYY-MM-DD 形式の文字列を取得
+
         // 1. 休憩を開始し、終了する
-        $breakStartTime = Carbon::parse($attendance->work_date . ' 12:00:00'); // 固定時刻で作成
-        $breakEndTime = Carbon::parse($attendance->work_date . ' 13:00:00');   // 固定時刻で作成
+        $breakStartTime = Carbon::parse($dateString . ' 12:00:00'); // 日付文字列と時刻文字列を結合
+        $breakEndTime = Carbon::parse($dateString . ' 13:00:00');   // 日付文字列と時刻文字列を結合
 
         BreakModel::factory()->for($attendance)->create([
             'break_start_time' => $breakStartTime,
             'break_end_time' => $breakEndTime,
         ]);
 
-        // 2. 退勤処理も行う (一覧画面で合計時間などが正しく表示されるため)
-        $attendance->update(['clock_out_time' => Carbon::parse($attendance->work_date . ' 17:00:00')]);
-
+        // 2. 退勤処理も行う
+        $attendance->update(['clock_out_time' => Carbon::parse($dateString . ' 17:00:00')]); // 日付文字列と時刻文字列を結合
 
         // 3. 勤怠一覧画面にアクセス
-        $response = $this->get(route('attendances.list')); // ユーザーの勤怠一覧ルート
+        $response = $this->get(route('attendances.list'));
 
         $response->assertOk();
-
-        // 表示されている月の勤怠記録に、期待する合計休憩時間が表示されているか確認
-        // Attendanceモデルの getFormattedTotalBreakTimeAttribute アクセサが '01:00' を返すことを期待
-        // 具体的な表示形式はBladeテンプレートに依存
-        // ここでは、少なくとも「休憩」というヘッダーと、計算された休憩時間（例: 01:00）が含まれることを確認
-        $response->assertSeeText('休憩'); // テーブルヘッダーなど
-        // $response->assertSeeText($breakStartTime->format('H:i')); // 個別の休憩開始時刻 (もし表示していれば)
-        // $response->assertSeeText($breakEndTime->format('H:i'));   // 個別の休憩終了時刻 (もし表示していれば)
-        $response->assertSeeText('01:00'); // 合計休憩時間 (Attendanceモデルのアクセサの結果を期待)
-
-        // 補足: このテストは Attendance モデルのアクセサや、
-        // 勤怠一覧画面のBladeテンプレートの実装に依存します。
-        // より堅牢なテストのためには、合計休憩時間の計算ロジック自体をユニットテストすることも有効です。
+        $response->assertSeeText('休憩');
+        $response->assertSeeText('01:00'); // 合計休憩時間
     }
 }

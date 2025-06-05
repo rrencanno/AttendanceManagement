@@ -28,26 +28,35 @@
             </tr>
         </thead>
         <tbody>
-            @if($attendances->count() > 0)
-                @foreach ($attendances as $attendance)
+        @if(count($dailyData) > 0)
+                @foreach ($dailyData as $day)
                 <tr>
-                    <td>{{ \Carbon\Carbon::parse($attendance->work_date)->isoFormat('MM/DD(ddd)') }}</td>
-                    <td>{{ $attendance->clock_in_time ? \Carbon\Carbon::parse($attendance->clock_in_time)->format('H:i') : '-' }}</td>
-                    <td>{{ $attendance->clock_out_time ? \Carbon\Carbon::parse($attendance->clock_out_time)->format('H:i') : '-' }}</td>
-                    <td>{{ $attendance->formatted_total_break_time }}</td>
-                    <td>{{ $attendance->formatted_total_work_time }}</td>
-                    <td>
-                        @if ($attendance->clock_in_time) {{-- 出勤記録がある場合のみ詳細ボタン表示 --}}
-                            <a href="{{ route('attendances.show', $attendance->id) }}" class="btn-detail">詳細</a>
-                        @else
-                            -
-                        @endif
-                    </td>
+                    <td>{{ $day['date']->isoFormat('MM/DD(ddd)') }}</td>
+                    @if ($day['attendance']) {{-- その日の勤怠データがある場合 --}}
+                        <td>{{ $day['attendance']->clock_in_time ? \Carbon\Carbon::parse($day['attendance']->clock_in_time)->format('H:i') : '' }}</td>
+                        <td>{{ $day['attendance']->clock_out_time ? \Carbon\Carbon::parse($day['attendance']->clock_out_time)->format('H:i') : '' }}</td>
+                        <td>{{ $day['attendance']->formatted_total_break_time ?: '' }}</td>
+                        <td>{{ $day['attendance']->formatted_total_work_time ?: '' }}</td>
+                        <td>
+                            @if ($day['attendance']->clock_in_time) {{-- 出勤記録がある場合のみ詳細ボタン表示 --}}
+                                <a href="{{ route('attendances.show', $day['attendance']->id) }}" class="btn-detail">詳細</a>
+                            @else
+                                {{-- 詳細ボタンも表示しない場合は空 --}}
+                            @endif
+                        </td>
+                    @else {{-- その日の勤怠データがない場合 --}}
+                        <td></td> {{-- 出勤: 空白 --}}
+                        <td></td> {{-- 退勤: 空白 --}}
+                        <td></td> {{-- 休憩: 空白 --}}
+                        <td></td> {{-- 合計: 空白 --}}
+                        <td></td> {{-- 詳細: 空白 --}}
+                    @endif
                 </tr>
                 @endforeach
             @else
+                {{-- この分岐は基本的には通らないはず (dailyDataは必ずその月の日数分ある) --}}
                 <tr>
-                    <td colspan="6" class="no-records">この月の勤怠記録はありません。</td>
+                    <td colspan="6" class="no-records">表示できるデータがありません。</td>
                 </tr>
             @endif
         </tbody>

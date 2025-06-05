@@ -10,6 +10,7 @@ use App\Models\AttendanceCorrectionRequest;
 use App\Http\Requests\UserCorrectionRequestStoreRequest; // FormRequest名を修正・統一
 use Carbon\Carbon;
 use Carbon\CarbonInterval; // 時間計算で使用
+use Carbon\CarbonPeriod;
 
 class AttendanceController extends Controller
 {
@@ -194,31 +195,48 @@ class AttendanceController extends Controller
         // リクエストから 'month' パラメータを取得。なければ現在の年月を使用 (YYYY-MM形式)
         $targetMonthInput = $request->input('month', Carbon::now()->format('Y-m'));
         try {
-            $targetMonth = Carbon::parse($targetMonthInput);
+            $targetMonth = Carbon::parse($targetMonthInput)->startOfMonth();
         } catch (\Exception $e) {
-            // 不正な月フォーマットの場合は当月にする
-            $targetMonth = Carbon::now();
+            $targetMonth = Carbon::now()->startOfMonth();
         }
 
 
-        // 表示月の最初の日と最後の日を取得
-        $firstDayOfMonth = $targetMonth->copy()->firstOfMonth()->startOfDay();
-        $lastDayOfMonth = $targetMonth->copy()->endOfMonth()->endOfDay();
+        $firstDayOfMonth = $targetMonth->copy();
+        $lastDayOfMonth = $targetMonth->copy()->endOfMonth();
 
-        // ログインユーザーの指定された月の勤怠記録を取得
-        $attendances = Attendance::where('user_id', $user->id)
+        // 指定された月の全ての日付を生成
+        $period = CarbonPeriod::create($firstDayOfMonth, $lastDayOfMonth);
+        $datesInMonth = [];
+        foreach ($period as $date) {
+            $datesInMonth[] = $date->copy(); // Carbonインスタンスとして保持
+        }
+
+        // ログインユーザーの指定された月の勤怠記録を取得し、日付をキーにした連想配列に変換
+        $attendancesRecords = Attendance::where('user_id', $user->id)
             ->whereBetween('work_date', [$firstDayOfMonth->toDateString(), $lastDayOfMonth->toDateString()])
-            ->with('breaks') // 休憩記録も一緒に取得 (モデルのアクセサで利用)
+            ->with('breaks')
             ->orderBy('work_date', 'asc')
-            ->get();
+            ->get()
+            ->keyBy(function ($item) {
+                return Carbon::parse($item->work_date)->toDateString(); // YYYY-MM-DD 形式の文字列をキーに
+            });
 
-        // 前月と翌月のナビゲーション用
+        // ビューに渡すための日毎のデータ配列を作成
+        $dailyData = [];
+        foreach ($datesInMonth as $date) {
+            $dateString = $date->toDateString();
+            $dailyData[] = [
+                'date' => $date, // Carbonインスタンス
+                'attendance' => $attendancesRecords->get($dateString) // 該当日の勤怠データ (なければnull)
+            ];
+        }
+
         $prevMonth = $targetMonth->copy()->subMonth()->format('Y-m');
         $nextMonth = $targetMonth->copy()->addMonth()->format('Y-m');
 
         return view('attendances.list', compact(
-            'attendances',
-            'targetMonth', // 'YYYY/MM' 形式での表示はビュー側で行う
+            'dailyData', // $attendances の代わりに $dailyData を渡す
+            'targetMonth',
             'prevMonth',
             'nextMonth'
         ));
@@ -231,7 +249,7 @@ class AttendanceController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $attendance->load(['user', 'breaks', 'latestPendingCorrectionRequest.applicant']); // applicantも取得
+        $attendance->load(['user', 'breaks', 'latestPendingCorrectionRequest.user']);
 
         // 編集時に表示する休憩データ
         // 申請中なら申請データ、そうでなければ元の勤怠データ

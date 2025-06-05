@@ -33,18 +33,18 @@
             </form>
         @elseif($status == 'working')
             {{-- 退勤ボタン --}}
-            <form method="POST" action="{{ route('attendances.clockout') }}"> {{-- 後でルート作成 --}}
+            <form method="POST" action="{{ route('attendances.clockout') }}">
                 @csrf
                 <button type="submit" class="btn btn-clock-out">退勤</button>
             </form>
             {{-- 休憩開始ボタン --}}
-            <form method="POST" action="{{ route('attendances.break.start') }}"> {{-- 後でルート作成 --}}
+            <form method="POST" action="{{ route('attendances.break.start') }}">
                 @csrf
                 <button type="submit" class="btn btn-break-start">休憩入</button>
             </form>
         @elseif($status == 'on_break')
             {{-- 休憩終了ボタン --}}
-            <form method="POST" action="{{ route('attendances.break.end') }}"> {{-- 後でルート作成 --}}
+            <form method="POST" action="{{ route('attendances.break.end') }}">
                 @csrf
                 <button type="submit" class="btn btn-break-end">休憩戻</button>
             </form>

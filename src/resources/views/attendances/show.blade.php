@@ -34,7 +34,7 @@
                             : ($attendance->clock_out_time ? \Carbon\Carbon::parse($attendance->clock_out_time)->format('H:i') : '');
         $requestedNoteContent = $isPendingCorrection
                                 ? $attendance->latestPendingCorrectionRequest->requested_note
-                                : $attendance->remarks; // 申請中でなければ元の備考を表示 (または空)
+                                : $attendance->note;
 
     @endphp
 

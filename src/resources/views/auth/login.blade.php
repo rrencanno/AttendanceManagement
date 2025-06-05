@@ -41,16 +41,6 @@
                 @enderror
             </div>
 
-            {{-- 「ログイン状態を記憶する」チェックボックス (任意) --}}
-            {{--
-            <div class="form-group form-check">
-                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                <label class="form-check-label" for="remember">
-                    ログイン状態を記憶する
-                </label>
-            </div>
-            --}}
-
             <div class="form-group">
                 <button type="submit" class="btn-login">
                     ログインする
@@ -61,16 +51,6 @@
         <div class="register-link">
             <a href="{{ route('register') }}">会員登録はこちら</a>
         </div>
-        {{-- パスワードリセットへのリンク (任意) --}}
-        {{--
-        @if (Route::has('password.request'))
-            <div class="forgot-password-link">
-                <a href="{{ route('password.request') }}">
-                    パスワードをお忘れですか？
-                </a>
-            </div>
-        @endif
-        --}}
     </div>
 </div>
 @endsection

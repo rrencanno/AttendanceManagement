@@ -31,7 +31,7 @@ class AttendanceCorrectionRequest extends Model
         return $this->belongsTo(Attendance::class);
     }
 
-    public function applicant() // user_id を参照するので、メソッド名を applicant にすると分かりやすい
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
