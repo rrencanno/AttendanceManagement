@@ -15,8 +15,8 @@ class CorrectionRequestController extends Controller
     {
         $statusFilter = $request->query('status', 'pending'); // デフォルトは 'pending'
 
-        $query = AttendanceCorrectionRequest::with(['applicant', 'attendance.user']) // 申請者と勤怠記録のユーザー情報も取得
-                                           ->orderBy('created_at', 'desc');
+        $query = AttendanceCorrectionRequest::with(['user', 'attendance.user'])
+                                       ->orderBy('created_at', 'desc');
 
         if ($statusFilter === 'pending') {
             $query->where('status', 'pending');
@@ -34,7 +34,7 @@ class CorrectionRequestController extends Controller
     {
         // 申請情報と、関連する現在の勤怠情報、申請者の情報をロード
         // 申請された休憩時間も整形してビューに渡す
-        $correction_request->load(['applicant', 'attendance.user', 'attendance.breaks']);
+        $correction_request->load(['user', 'attendance.user', 'attendance.breaks']);
 
         // 申請された休憩情報を整形 (ビューで表示しやすくするため)
         $requestedBreaks = [];

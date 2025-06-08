@@ -176,25 +176,38 @@ class AdminAttendanceDetailTest extends TestCase
 
         // データベースの勤怠情報が更新されたことを確認
         $updatedAttendance = $this->staffAttendance->fresh(); // DBから最新情報を取得
-        $this->assertEquals(
-            Carbon::parse($updatedAttendance->work_date . ' ' . $updateData['clock_in_time'])->toDateTimeString(),
-            Carbon::parse($updatedAttendance->clock_in_time)->toDateTimeString()
-        );
-        $this->assertEquals(
-            Carbon::parse($updatedAttendance->work_date . ' ' . $updateData['clock_out_time'])->toDateTimeString(),
-            Carbon::parse($updatedAttendance->clock_out_time)->toDateTimeString()
-        );
-        $this->assertEquals($updateData['remarks'], $updatedAttendance->note); // カラム名は note
 
-        // データベースの休憩情報が更新されたことを確認 (1件になっているはず)
-        $this->assertCount(1, $updatedAttendance->breaks);
-        $this->assertEquals(
-            Carbon::parse($updatedAttendance->work_date . ' ' . $updateData['break_start_time'][0])->toDateTimeString(),
-            Carbon::parse($updatedAttendance->breaks[0]->break_start_time)->toDateTimeString()
+        // work_date を YYYY-MM-DD 形式の文字列として取得
+        $workDateString = Carbon::parse($updatedAttendance->work_date)->toDateString();
+
+        // 出勤時刻の比較
+        $expectedClockIn = Carbon::parse($workDateString . ' ' . $updateData['clock_in_time']);
+        $this->assertTrue(
+            $expectedClockIn->eq(Carbon::parse($updatedAttendance->clock_in_time)),
+            "Expected clock_in_time to be " . $expectedClockIn->toDateTimeString() . " but got " . Carbon::parse($updatedAttendance->clock_in_time)->toDateTimeString()
         );
-        $this->assertEquals(
-            Carbon::parse($updatedAttendance->work_date . ' ' . $updateData['break_end_time'][0])->toDateTimeString(),
-            Carbon::parse($updatedAttendance->breaks[0]->break_end_time)->toDateTimeString()
+
+        // 退勤時刻の比較
+        $expectedClockOut = Carbon::parse($workDateString . ' ' . $updateData['clock_out_time']);
+        $this->assertTrue(
+            $expectedClockOut->eq(Carbon::parse($updatedAttendance->clock_out_time)),
+            "Expected clock_out_time to be " . $expectedClockOut->toDateTimeString() . " but got " . Carbon::parse($updatedAttendance->clock_out_time)->toDateTimeString()
+        );
+
+        $this->assertEquals($updateData['remarks'], $updatedAttendance->note);
+
+        $this->assertCount(1, $updatedAttendance->breaks);
+        // 休憩時間の比較も同様に修正
+        $expectedBreakStart = Carbon::parse($workDateString . ' ' . $updateData['break_start_time'][0]);
+        $this->assertTrue(
+            $expectedBreakStart->eq(Carbon::parse($updatedAttendance->breaks[0]->break_start_time)),
+            "Expected break_start_time to be " . $expectedBreakStart->toDateTimeString() . " but got " . Carbon::parse($updatedAttendance->breaks[0]->break_start_time)->toDateTimeString()
+        );
+
+        $expectedBreakEnd = Carbon::parse($workDateString . ' ' . $updateData['break_end_time'][0]);
+        $this->assertTrue(
+            $expectedBreakEnd->eq(Carbon::parse($updatedAttendance->breaks[0]->break_end_time)),
+            "Expected break_end_time to be " . $expectedBreakEnd->toDateTimeString() . " but got " . Carbon::parse($updatedAttendance->breaks[0]->break_end_time)->toDateTimeString()
         );
     }
 }

@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="admin-approve-form-container">
-    <h2 class="page-title">勤怠詳細</h2> {{-- 画像に合わせてタイトル変更 --}}
+    <h2 class="page-title">勤怠詳細</h2>
 
     @if (session('status'))
         <div class="alert alert-success">{{ session('status') }}</div>
@@ -17,14 +17,13 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    {{-- カード形式をやめ、情報を直接表示 --}}
     <div class="approval-details">
         <div class="detail-row">
             <span class="item-label">名前</span>
-            <span class="item-value">{{ $correction_request->applicant ? $correction_request->applicant->name : 'N/A' }}</span>
+            <span class="item-value">{{ $correction_request->user ? $correction_request->user->name : 'N/A' }}</span>
         </div>
 
-        <div class="detail-row"> {{-- 「日付」項目を画像に合わせて表示 --}}
+        <div class="detail-row">
             <span class="item-label">日付</span>
             <span class="item-value">
                 {{ \Carbon\Carbon::parse($correction_request->attendance->work_date)->isoFormat('YYYY年') }}
@@ -108,7 +107,7 @@
         <div class="detail-row remarks-row">
             <span class="item-label">備考</span>
             <span class="item-value remarks-display-box">
-                {{ $correction_request->requested_note ?: '' }} {{-- (記載なし) は不要なら削除 --}}
+                {{ $correction_request->requested_note ?: '' }}
             </span>
         </div>
     </div>
