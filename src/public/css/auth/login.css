@@ -39,7 +39,7 @@ body {
 }
 
 .form-group label {
-    display: block;
+    display: inline-block;
     margin-bottom: 8px;
     font-weight: bold;
     font-size: 14px;
@@ -79,6 +79,25 @@ body {
     font-size: 0.875em;
     margin-top: 0.25rem;
 }
+
+/* チェックボックスとラベルのスタイル */
+.remember-me-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.remember-me-group .form-check-input {
+    margin-right: 8px;
+}
+
+.remember-me-group .form-check-label {
+    font-size: 0.9em;
+    color: #555;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
 
 .btn-login {
     /* クラス名を変更 */

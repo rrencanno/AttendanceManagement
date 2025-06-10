@@ -41,6 +41,14 @@
                 @enderror
             </div>
 
+            {{-- 「ログイン状態を保存する」チェックボックスを追加 --}}
+            <div class="form-group remember-me-group">
+                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                <label class="form-check-label" for="remember">
+                    ログイン状態を保存する
+                </label>
+            </div>
+
             <div class="form-group">
                 <button type="submit" class="btn-login">
                     ログインする

@@ -24,8 +24,6 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 // == User Routes (Authenticated & Verified) ==
 Route::middleware(['auth', 'verified'])->group(function () {
-
-    // Attendance Routes
     Route::controller(AttendanceController::class)->prefix('attendances')->name('attendances.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/clock-in', 'clockIn')->name('clockin');
@@ -40,13 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Correction Request Routes (User)
     Route::controller(UserCorrectionRequestController::class)->prefix('correction-requests')->name('correction_requests.')->group(function () {
         Route::get('/', 'index')->name('index');
-        // もし作成画面などがあればここに追加
-        // Route::get('/create', 'create')->name('create');
-        // Route::post('/', 'store')->name('store');
     });
-
-    // 他のユーザー向けルートがあればここに追加
-    // 例: Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 });
 
 // 管理者認証関連

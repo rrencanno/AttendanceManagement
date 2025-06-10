@@ -73,16 +73,16 @@
                     @forelse ($displayBreaks as $break)
                         <div class="break-time-group" data-index="{{ $breakIndex }}">
                             <input type="time" name="break_start_time[]"
-                                   value="{{ old('break_start_time.'.$breakIndex, $break->break_start_time ? \Carbon\Carbon::parse($break->break_start_time)->format('H:i') : '') }}"
+                                   value="{{ old('break_start_time.'.$breakIndex, $break->start ? \Carbon\Carbon::createFromTimeString($break->start)->format('H:i') : '') }}"
                                    {{ $isPendingCorrection ? 'readonly' : '' }}>
                             <span class="time-separator">〜</span>
                             <input type="time" name="break_end_time[]"
-                                   value="{{ old('break_end_time.'.$breakIndex, $break->break_end_time ? \Carbon\Carbon::parse($break->break_end_time)->format('H:i') : '') }}"
+                                   value="{{ old('break_end_time.'.$breakIndex, $break->end ? \Carbon\Carbon::createFromTimeString($break->end)->format('H:i') : '') }}"
                                    {{ $isPendingCorrection ? 'readonly' : '' }}>
                             @if (!$isPendingCorrection && $breakIndex > 0)
                                 <button type="button" class="btn-remove-break" onclick="removeBreak(this)">削除</button>
                             @elseif (!$isPendingCorrection && count($displayBreaks) === 1 && $breakIndex === 0)
-                                <!-- 最初の行は削除ボタンなし、または別の処理 -->
+                                <!-- 最初の行は削除ボタンなし -->
                             @endif
                         </div>
                         @php $breakIndex++; @endphp
@@ -119,7 +119,7 @@
         </div>
     </form>
      <div class="back-link-container">
-        <a href="{{ route('attendances.list') }}" class="btn btn-back">戻る</a>
+        <a href="{{ route('attendances.list', ['month' => $returnMonth]) }}" class="btn btn-back">戻る</a>
     </div>
 </div>
 
@@ -127,7 +127,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const addBreakButton = document.getElementById('addBreakButton');
     const breakTimesContainer = document.getElementById('breakTimesContainer');
-    let breakIndexCounter = {{ count($displayBreaks) }}; // 初期表示されている休憩の数
+    let breakIndexCounter = {{ count($displayBreaks) }};
 
     if (addBreakButton) {
         addBreakButton.addEventListener('click', function() {
@@ -149,13 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function removeBreak(button) {
     const breakGroup = button.closest('.break-time-group');
     if (breakGroup) {
-        // 最初の休憩入力欄セットは削除させない場合 (任意)
-        // const container = document.getElementById('breakTimesContainer');
-        // if (container.querySelectorAll('.break-time-group').length > 1) {
-        //    breakGroup.remove();
-        // } else {
-        //    alert('少なくとも1つの休憩時間を入力してください。');
-        // }
         breakGroup.remove();
     }
 }

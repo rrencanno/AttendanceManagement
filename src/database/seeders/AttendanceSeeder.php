@@ -6,7 +6,7 @@ use App\Models\Attendance;
 use App\Models\BreakModel;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Carbon\Carbon; // Carbonをuse
+use Carbon\Carbon;
 
 class AttendanceSeeder extends Seeder
 {
@@ -17,15 +17,15 @@ class AttendanceSeeder extends Seeder
      */
     public function run()
     {
-        $users = User::all(); // 全ユーザーを取得
-        $faker = \Faker\Factory::create('ja_JP'); // 日本語のダミーデータを生成する場合
+        $users = User::all();
+        $faker = \Faker\Factory::create('ja_JP');
 
         foreach ($users as $user) {
-            // 各ユーザーに対して、過去N日分の勤怠データを作成 (例: 過去15～25日分)
-            for ($i = 0; $i < $faker->numberBetween(15, 25); $i++) {
-                $workDate = Carbon::today()->subDays($i); // i日前の日付
+            // 各ユーザーに対して、過去N日分の勤怠データを作成 (過去15～25日分)
+            for ($i = 1; $i <= $faker->numberBetween(15, 25); $i++) {
+                $workDate = Carbon::today()->subDays($i);
 
-                // 同じ日に複数の勤怠レコードができないようにチェック (オプション)
+                // 同じ日に複数の勤怠レコードができないようにチェック
                 if (Attendance::where('user_id', $user->id)->where('work_date', $workDate->format('Y-m-d'))->exists()) {
                     continue;
                 }
@@ -46,11 +46,6 @@ class AttendanceSeeder extends Seeder
                              BreakModel::create(array_merge(['attendance_id' => $attendance->id], $breakData));
                         }
                     }
-
-                    // オプション: 20%の確率で短い休憩をもう1回作成 (夕方休憩など)
-                    // if ($faker->boolean(20)) {
-                    //     // ここにも同様のロジックで休憩時間帯を調整して作成
-                    // }
                 }
             }
         }

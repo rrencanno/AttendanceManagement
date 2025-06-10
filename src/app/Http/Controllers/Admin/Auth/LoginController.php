@@ -18,14 +18,14 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) { // Auth::guard('admin') を削除
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             // ログインに成功したら、is_admin フラグを確認
             if (Auth::user()->is_admin) {
                 $request->session()->regenerate();
                 return redirect()->intended(route('admin.attendances.list'));
             } else {
                 // is_admin でないユーザーが管理者ログインしようとした場合
-                Auth::logout(); // 一旦ログアウトさせる
+                Auth::logout();
                 return back()->withErrors([
                     'email' => '管理者権限がありません。',
                 ])->onlyInput('email');
@@ -39,7 +39,7 @@ class LoginController extends Controller
 
     public function destroy(Request $request)
     {
-        Auth::logout(); // Auth::guard('admin') を削除
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         

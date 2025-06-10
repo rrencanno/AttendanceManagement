@@ -1,11 +1,9 @@
 .correction-request-list-container {
     width: 90%;
     max-width: 1000px;
-    /* 画像の幅に合わせる */
     margin: 30px auto;
     padding: 20px;
     background-color: #f0f2f5;
-    /* 背景色 */
 }
 
 .page-title {
@@ -33,9 +31,7 @@
     border: none;
     background-color: transparent;
     margin-right: 5px;
-    /* タブ間の隙間 */
     border-bottom: 3px solid transparent;
-    /* 非アクティブ時の下線（透明） */
     transition: color 0.2s, border-bottom-color 0.2s;
 }
 
@@ -45,9 +41,7 @@
 
 .tab-button.active {
     color: #007bff;
-    /* アクティブなタブの文字色 */
     border-bottom-color: #007bff;
-    /* アクティブなタブの下線 */
     font-weight: bold;
 }
 
@@ -58,7 +52,6 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     overflow: hidden;
-    /* 角丸を効かせるため */
 }
 
 .request-table th,
@@ -72,7 +65,6 @@
 .request-table th:last-child,
 .request-table td:last-child {
     text-align: center;
-    /* 詳細ボタンの列は中央寄せ */
 }
 
 
@@ -100,7 +92,6 @@
 .status-badge {
     padding: 4px 8px;
     border-radius: 12px;
-    /* 楕円形っぽく */
     font-size: 0.85em;
     font-weight: 500;
     color: #fff;
@@ -109,13 +100,11 @@
 
 .status-pending {
     background-color: #ffc107;
-    /* 黄色系 */
     color: #333;
 }
 
 .status-approved {
     background-color: #28a745;
-    /* 緑系 */
 }
 
 
@@ -123,7 +112,6 @@
     display: inline-block;
     padding: 6px 12px;
     background-color: #007bff;
-    /* 青系 */
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -140,44 +128,4 @@
     padding: 30px;
     color: #777;
     font-style: italic;
-}
-
-.pagination-container {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-}
-
-/* Laravelデフォルトのページネーションスタイルを調整する場合 (必要に応じて) */
-.pagination {
-    display: flex;
-    padding-left: 0;
-    list-style: none;
-    border-radius: .25rem;
-}
-
-.page-item .page-link {
-    position: relative;
-    display: block;
-    padding: .5rem .75rem;
-    margin-left: -1px;
-    line-height: 1.25;
-    color: #007bff;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-}
-
-.page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.page-item.disabled .page-link {
-    color: #6c757d;
-    pointer-events: none;
-    cursor: auto;
-    background-color: #fff;
-    border-color: #dee2e6;
 }

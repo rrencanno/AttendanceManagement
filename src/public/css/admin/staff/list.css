@@ -67,7 +67,6 @@
     display: inline-block;
     padding: 6px 12px;
     background-color: #007bff;
-    /* 詳細ボタンの色 (青系) */
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -84,68 +83,4 @@
     padding: 30px;
     color: #777;
     font-style: italic;
-}
-
-/* ページネーションのスタイルは admin/common.css や app.blade.php 側で共通化しても良い */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.pagination li {
-    list-style: none;
-    margin: 0 5px;
-    display: inline-block;
-}
-
-.pagination a,
-.pagination span,
-.disabled,
-.px-4.py-2.bg-gray-300.text-gray-600.rounded,
-.px-4.py-2.bg-blue-500.text-white.border.border-blue-500.rounded {
-    padding: 10px 14px;
-    border: none;
-    border-radius: 50%;
-    text-decoration: none;
-    color: #333;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-}
-
-.pagination .active span {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.pagination .disabled span {
-    color: #999;
-    border-color: #ddd;
-}
-
-/* 「<」「>」ボタンのデザイン */
-.pagination li:first-child a,
-.pagination li:first-child span,
-.pagination li:last-child a,
-.pagination li:last-child span {
-    border-radius: 50%;
-}
-
-/* 現在のページのスタイル */
-.px-4.py-2.bg-blue-500.text-white.border.border-blue-500.rounded {
-    background-color: #f5c800;
-    color: white;
-    border-color: #f5c800;
-}
-
-/* 「<」が無効（最初のページ）の場合 */
-.disabled {
-    color: #999;
-    border-color: #ddd;
-    background-color: #f8f9fa;
 }

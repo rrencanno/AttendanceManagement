@@ -39,7 +39,7 @@
                         <td>{{ $day['attendance']->formatted_total_work_time ?: '' }}</td>
                         <td>
                             @if ($day['attendance']->clock_in_time) {{-- 出勤記録がある場合のみ詳細ボタン表示 --}}
-                                <a href="{{ route('attendances.show', $day['attendance']->id) }}" class="btn-detail">詳細</a>
+                                <a href="{{ route('attendances.show', ['attendance' => $day['attendance']->id, 'return_month' => $targetMonth->format('Y-m')]) }}" class="btn-detail">詳細</a>
                             @else
                                 {{-- 詳細ボタンも表示しない場合は空 --}}
                             @endif

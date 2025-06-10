@@ -242,8 +242,8 @@ class AttendanceController extends Controller
         ));
     }
 
-    // 勤怠詳細ページのメソッド (スタブ)
-    public function show(Attendance $attendance)
+    // 勤怠詳細ページのメソッド
+    public function show(Request $request, Attendance $attendance)
     {
         if ($attendance->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
@@ -251,33 +251,32 @@ class AttendanceController extends Controller
 
         $attendance->load(['user', 'breaks', 'latestPendingCorrectionRequest.user']);
 
-        // 編集時に表示する休憩データ
-        // 申請中なら申請データ、そうでなければ元の勤怠データ
         $displayBreaks = [];
         if ($attendance->latestPendingCorrectionRequest && $attendance->latestPendingCorrectionRequest->status == 'pending') {
             if (is_array($attendance->latestPendingCorrectionRequest->requested_break_details)) {
                 foreach ($attendance->latestPendingCorrectionRequest->requested_break_details as $breakDetail) {
-                    $displayBreaks[] = (object)[ // ビューで扱いやすいようにオブジェクトに
-                        'break_start_time' => $breakDetail['start'] ?? null,
-                        'break_end_time' => $breakDetail['end'] ?? null,
+                    $displayBreaks[] = (object)[
+                        'start' => $breakDetail['start'] ?? null,
+                        'end' => $breakDetail['end'] ?? null,
                     ];
                 }
             }
         } else {
             foreach ($attendance->breaks as $break) {
                 $displayBreaks[] = (object)[
-                    'break_start_time' => $break->break_start_time,
-                    'break_end_time' => $break->break_end_time,
+                    'start' => $break->break_start_time,
+                    'end' => $break->break_end_time,
                 ];
             }
         }
         // 常に少なくとも1セットは表示・入力できるようにする
         if (empty($displayBreaks)) {
-            $displayBreaks[] = (object)['break_start_time' => null, 'break_end_time' => null];
+            $displayBreaks[] = (object)['start' => null, 'end' => null];
         }
 
+        $returnMonth = $request->input('return_month', Carbon::parse($attendance->work_date)->format('Y-m'));
 
-        return view('attendances.show', compact('attendance', 'displayBreaks'));
+        return view('attendances.show', compact('attendance', 'displayBreaks', 'returnMonth'));
     }
 
     public function requestCorrection(UserCorrectionRequestStoreRequest $request, Attendance $attendance)

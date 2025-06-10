@@ -32,30 +32,36 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($attendances as $attendance)
-            <tr>
-                <td>{{ \Carbon\Carbon::parse($attendance->work_date)->isoFormat('MM/DD(ddd)') }}</td>
-                <td>{{ $attendance->clock_in_time ? \Carbon\Carbon::parse($attendance->clock_in_time)->format('H:i') : '-' }}</td>
-                <td>{{ $attendance->clock_out_time ? \Carbon\Carbon::parse($attendance->clock_out_time)->format('H:i') : '-' }}</td>
-                <td>{{ $attendance->formatted_total_break_time ?? '00:00' }}</td>
-                <td>{{ $attendance->formatted_total_work_time ?? '00:00' }}</td>
-                <td>
-                    <a href="{{ route('admin.attendances.show', $attendance->id) }}" class="btn-detail">詳細</a>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6" class="no-records">この月の勤怠記録はありません。</td>
-            </tr>
-            @endforelse
+        @if(count($dailyData) > 0)
+                @foreach ($dailyData as $day)
+                <tr>
+                    <td>{{ $day['date']->isoFormat('MM/DD(ddd)') }}</td>
+                    @if ($day['attendance']) {{-- その日の勤怠データがある場合 --}}
+                        <td>{{ $day['attendance']->clock_in_time ? \Carbon\Carbon::parse($day['attendance']->clock_in_time)->format('H:i') : '' }}</td>
+                        <td>{{ $day['attendance']->clock_out_time ? \Carbon\Carbon::parse($day['attendance']->clock_out_time)->format('H:i') : '' }}</td>
+                        <td>{{ $day['attendance']->formatted_total_break_time && $day['attendance']->formatted_total_break_time !== '00:00' ? $day['attendance']->formatted_total_break_time : '' }}</td>
+                        <td>{{ $day['attendance']->formatted_total_work_time && $day['attendance']->formatted_total_work_time !== '00:00' ? $day['attendance']->formatted_total_work_time : '' }}</td>
+                        <td>
+                            @if ($day['attendance']->clock_in_time)
+                                <a href="{{ route('admin.attendances.show', $day['attendance']->id) }}" class="btn-detail">詳細</a>
+                            @endif
+                        </td>
+                    @else {{-- その日の勤怠データがない場合 --}}
+                        <td></td> {{-- 出勤: 空白 --}}
+                        <td></td> {{-- 退勤: 空白 --}}
+                        <td></td> {{-- 休憩: 空白 --}}
+                        <td></td> {{-- 合計: 空白 --}}
+                        <td></td> {{-- 詳細: 空白 --}}
+                    @endif
+                </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="6" class="no-records">表示できるデータがありません。</td>
+                </tr>
+            @endif
         </tbody>
     </table>
-
-    @if ($attendances->hasPages())
-        <div class="pagination-container">
-            {{ $attendances->appends(['month' => $targetMonth->format('Y-m')])->links() }}
-        </div>
-    @endif
 
     <div class="action-buttons-footer">
         <a href="{{ route('admin.attendances.export_csv_by_staff', ['user' => $user->id, 'month' => $targetMonth->format('Y-m')]) }}" class="btn btn-csv-export">

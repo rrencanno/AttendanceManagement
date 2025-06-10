@@ -8,6 +8,7 @@ use App\Models\Attendance;
 use App\Models\BreakModel;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use App\Http\Requests\Admin\AttendanceUpdateRequest;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -89,24 +90,47 @@ class AttendanceController extends Controller
     public function listByStaff(Request $request, User $user, $month = null)
     {
         try {
-            $targetMonth = $month ? Carbon::parse($month . "-01") : Carbon::now();
+            $targetMonth = $month ? Carbon::parse($month . "-01")->startOfMonth() : Carbon::now()->startOfMonth();
         } catch (\Exception $e) {
-            $targetMonth = Carbon::now();
+            $targetMonth = Carbon::now()->startOfMonth();
         }
 
-        $attendances = Attendance::where('user_id', $user->id)
-            ->whereYear('work_date', $targetMonth->year)
-            ->whereMonth('work_date', $targetMonth->month)
+        $firstDayOfMonth = $targetMonth->copy();
+        $lastDayOfMonth = $targetMonth->copy()->endOfMonth();
+
+        // 指定された月の全ての日付を生成
+        $period = CarbonPeriod::create($firstDayOfMonth, $lastDayOfMonth);
+        $datesInMonth = [];
+        foreach ($period as $date) {
+            $datesInMonth[] = $date->copy();
+        }
+
+        // 指定されたスタッフの、指定された月の勤怠記録を取得し、日付をキーにした連想配列に変換
+        $attendancesRecords = Attendance::where('user_id', $user->id)
+            ->whereBetween('work_date', [$firstDayOfMonth->toDateString(), $lastDayOfMonth->toDateString()])
             ->with('breaks')
             ->orderBy('work_date', 'asc')
-            ->paginate(31); // 月の最大日数分表示できるように調整 (またはページネーションなしで全件取得も可)
+            ->get()
+            ->keyBy(function ($item) {
+                return Carbon::parse($item->work_date)->toDateString();
+            });
+
+        // ビューに渡すための日毎のデータ配列を作成
+        $dailyData = [];
+        foreach ($datesInMonth as $date) {
+            $dateString = $date->toDateString();
+            $dailyData[] = [
+                'date' => $date,
+                'attendance' => $attendancesRecords->get($dateString) // 該当日の勤怠データ (なければnull)
+            ];
+        }
 
         $prevMonth = $targetMonth->copy()->subMonth()->format('Y-m');
         $nextMonth = $targetMonth->copy()->addMonth()->format('Y-m');
 
-        return view('admin.attendances.list_by_staff', compact( // ビュー名を指定
+        return view('admin.attendances.list_by_staff', compact(
             'user',
-            'attendances',
+            'dailyData', // $attendances の代わりに $dailyData を渡す
             'targetMonth',
             'prevMonth',
             'nextMonth'

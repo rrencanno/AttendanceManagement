@@ -63,9 +63,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border-radius: 6px;
     overflow: hidden;
-    /* for border-radius on th */
     margin-bottom: 20px;
-    /* CSVボタンとの間隔 */
 }
 
 .attendance-table th,
@@ -117,52 +115,9 @@
     font-style: italic;
 }
 
-.pagination-container {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    /* CSVボタンとの間隔 */
-    display: flex;
-    justify-content: center;
-}
-
-/* Pagination styles (前回と同様) */
-.pagination {
-    display: flex;
-    padding-left: 0;
-    list-style: none;
-    border-radius: .25rem;
-}
-
-.page-item .page-link {
-    position: relative;
-    display: block;
-    padding: .5rem .75rem;
-    margin-left: -1px;
-    line-height: 1.25;
-    color: #007bff;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-}
-
-.page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.page-item.disabled .page-link {
-    color: #6c757d;
-    pointer-events: none;
-    cursor: auto;
-    background-color: #fff;
-    border-color: #dee2e6;
-}
-
-
+/* csvボタンのスタイル */
 .action-buttons-footer {
     text-align: right;
-    /* CSV出力ボタンを右寄せ */
     margin-bottom: 15px;
 }
 
@@ -170,7 +125,6 @@
     display: inline-block;
     padding: 10px 20px;
     background-color: #28a745;
-    /* 緑系 */
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -186,7 +140,6 @@
 
 .back-link-container {
     text-align: right;
-    /* 戻るボタンは中央 */
     margin-top: 10px;
 }
 

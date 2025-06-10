@@ -2,16 +2,13 @@ header {
     background-color: #000;
     color: white;
     padding: 0 24px;
-    /* 上下のpaddingを0にし、高さをheader-contentに依存させる */
 }
 
 .header-content {
     display: flex;
     justify-content: space-between;
-    /* ロゴとナビを両端に配置 */
     align-items: center;
     height: 60px;
-    /* ヘッダーの高さを固定 (お好みで調整) */
 }
 
 .logo {
@@ -22,11 +19,10 @@ header {
 .logo-link {
     text-decoration: none;
     display: inline-block;
-    /* vertical-alignを効かせるため */
 }
 
 .logo-link img {
-    width: 180px;
+    width: 220px;
     vertical-align: middle;
 }
 
@@ -69,4 +65,68 @@ header {
 
 .header-nav .btn-logout:hover {
     background-color: #333;
+}
+
+/* ページネーションのスタイル(全ページ共通) */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination li {
+    list-style: none;
+    margin: 0 5px;
+    display: inline-block;
+}
+
+.pagination a,
+.pagination span,
+.disabled,
+.px-4.py-2.bg-gray-300.text-gray-600.rounded,
+.px-4.py-2.bg-blue-500.text-white.border.border-blue-500.rounded {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #333;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.pagination .active span {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination .disabled span {
+    color: #999;
+    border-color: #ddd;
+}
+
+/* 「<」「>」ボタンのデザイン */
+.pagination li:first-child a,
+.pagination li:first-child span,
+.pagination li:last-child a,
+.pagination li:last-child span {
+    border-radius: 50%;
+}
+
+/* 現在のページのスタイル */
+.px-4.py-2.bg-blue-500.text-white.border.border-blue-500.rounded {
+    background-color: #f5c800;
+    color: white;
+    border-color: #f5c800;
+}
+
+/* 「<」が無効（最初のページ）の場合 */
+.disabled {
+    color: #999;
+    border-color: #ddd;
+    background-color: #f8f9fa;
 }

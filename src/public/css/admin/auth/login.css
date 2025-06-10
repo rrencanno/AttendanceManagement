@@ -1,22 +1,18 @@
+body {
+    background-color: #fff;
+}
+
 .login-form-container {
-    /* login.blade.php で <h1 class="login-title"> と <form> を囲む新しいdiv */
     width: 100%;
-    max-width: 400px;
-    /* フォームの幅を調整 */
+    max-width: 500px;
     margin: 50px auto;
-    /* 上下にマージン、左右中央寄せ */
     padding: 30px;
     background-color: #fff;
-    /* フォーム部分の背景を白に */
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
-    /* タイトルなどを中央寄せ */
 }
 
 
 .login-title {
-    /* これは変更なしでOK */
     font-size: 1.75em;
     font-weight: bold;
     margin-bottom: 25px;
@@ -24,21 +20,18 @@
 }
 
 .login-form {
-    /* これは変更なしでOK */
     text-align: left;
 }
 
 .form-group {
-    /* これは変更なしでOK */
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .form-label {
-    /* これは変更なしでOK */
     display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 0.9em;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 14px;
     color: #555;
 }
 
