@@ -9,7 +9,7 @@ class BreakModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'breaks'; // テーブル名を指定
+    protected $table = 'breaks';
 
     protected $fillable = [
         'attendance_id',
@@ -22,7 +22,6 @@ class BreakModel extends Model
         'break_end_time' => 'datetime',
     ];
 
-    // リレーションシップ
     public function attendance()
     {
         return $this->belongsTo(Attendance::class);

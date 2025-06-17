@@ -37,12 +37,26 @@
             @forelse ($attendances as $attendance)
             <tr>
                 <td>{{ $attendance->user ? $attendance->user->name : 'N/A' }}</td>
-                <td>{{ $attendance->clock_in_time ? \Carbon\Carbon::parse($attendance->clock_in_time)->format('H:i') : '-' }}</td>
-                <td>{{ $attendance->clock_out_time ? \Carbon\Carbon::parse($attendance->clock_out_time)->format('H:i') : '-' }}</td>
-                <td>{{ $attendance->formatted_total_break_time ?? '00:00' }}</td> {{-- モデルアクセサを使用 --}}
-                <td>{{ $attendance->formatted_total_work_time ?? '00:00' }}</td> {{-- モデルアクセサを使用 --}}
+                <td>{{ $attendance->clock_in_time ? \Carbon\Carbon::parse($attendance->clock_in_time)->format('H:i') : '' }}</td>
+
+                {{-- 退勤時刻の表示 --}}
+                @if ($attendance->clock_out_time)
+                    <td>{{ \Carbon\Carbon::parse($attendance->clock_out_time)->format('H:i') }}</td>
+                    <td>{{ $attendance->formatted_total_break_time ?? '' }}</td>
+                    <td>{{ $attendance->formatted_total_work_time ?? '' }}</td>
+                @else
+                    <td></td> {{-- 退勤: 空白 --}}
+                    <td></td> {{-- 休憩: 空白 --}}
+                    <td></td> {{-- 合計: 空白 --}}
+                @endif
+
                 <td>
-                    <a href="{{ route('admin.attendances.show', $attendance->id) }}" class="btn-detail">詳細</a>
+                    {{-- 詳細ボタンは出勤記録があれば表示 --}}
+                    @if ($attendance->clock_in_time)
+                        <a href="{{ route('admin.attendances.show', $attendance->id) }}" class="btn-detail">詳細</a>
+                    @else
+                        {{-- 出勤記録がなければ詳細ボタンも表示しない --}}
+                    @endif
                 </td>
             </tr>
             @empty
@@ -62,14 +76,14 @@
 @endsection
 
 @push('scripts')
-    {{-- カレンダーピッカー用のJS (例: flatpickr) --}}
+    {{-- カレンダーピッカー用のJS --}}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/ja.js"></script> {{-- 日本語化 --}}
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ja.js"></script>
     <script>
         flatpickr("#datePicker", {
             dateFormat: "Y-m-d",
             defaultDate: "{{ $targetDate->toDateString() }}",
-            locale: "ja", // 日本語化
+            locale: "ja",
             onChange: function(selectedDates, dateStr, instance) {
                 if (dateStr) {
                     // 日付が変更されたら、その日付の勤怠一覧ページに遷移

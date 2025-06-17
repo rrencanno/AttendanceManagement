@@ -23,14 +23,13 @@ class AttendanceController extends Controller
             $targetDate = Carbon::today(); // 不正な日付の場合は今日にする
         }
 
-        // その日の勤怠記録を全ユーザー分取得 (User情報も一緒に)
-        // 休憩時間や合計勤務時間はAttendanceモデルのアクセサで計算される想定
+        // その日の勤怠記録を全ユーザー分取得
         $attendances = Attendance::where('work_date', $targetDate->toDateString())
                                 ->with(['user', 'breaks']) // ユーザー情報と休憩情報をEager load
-                                ->orderBy('user_id') // または社員番号順など
-                                ->paginate(10); // 1ページあたり10件表示
+                                ->orderBy('user_id')
+                                ->paginate(10);
 
-        // 前日と翌日のナビゲーション用
+        // 前日と翌日のフォーマットを作成
         $prevDate = $targetDate->copy()->subDay()->toDateString();
         $nextDate = $targetDate->copy()->addDay()->toDateString();
 
@@ -44,11 +43,13 @@ class AttendanceController extends Controller
 
     public function show(Attendance $attendance)
     {
-        $attendance->load(['user', 'breaks']); // ユーザー情報と休憩情報をEager load
+        $attendance->load(['user', 'breaks']);
 
-        // 休憩時間は複数ある可能性を考慮し、ビューでループ表示できるようにする
-        // もし休憩がなければ、空の入力欄を1つ表示するためにダミーデータを渡すことも検討
-        $breaks = $attendance->breaks->isNotEmpty() ? $attendance->breaks : collect([(object)['break_start_time' => null, 'break_end_time' => null]]);
+        // 休憩時間が複数ある場合は、ビューでループ表示できるようにする
+        // もし休憩がなければ、空の入力欄を1つ表示するためにダミーデータを渡す
+        $breaks = $attendance->breaks->isNotEmpty()
+            ? $attendance->breaks
+            : collect([(object)['break_start_time' => null, 'break_end_time' => null]]);
 
 
         return view('admin.attendances.show', compact('attendance', 'breaks'));
@@ -77,8 +78,8 @@ class AttendanceController extends Controller
             if (!empty($startTime) && !empty($endTime)) {
                 BreakModel::create([
                     'attendance_id' => $attendance->id,
-                    'break_start_time' => $workDate->copy()->setTimeFromTimeString($startTime), // 日付情報を付与してdatetimeとして保存
-                    'break_end_time' => $workDate->copy()->setTimeFromTimeString($endTime),   // 同上
+                    'break_start_time' => $workDate->copy()->setTimeFromTimeString($startTime),
+                    'break_end_time' => $workDate->copy()->setTimeFromTimeString($endTime),
                 ]);
             }
         }
@@ -121,7 +122,7 @@ class AttendanceController extends Controller
             $dateString = $date->toDateString();
             $dailyData[] = [
                 'date' => $date,
-                'attendance' => $attendancesRecords->get($dateString) // 該当日の勤怠データ (なければnull)
+                'attendance' => $attendancesRecords->get($dateString)
             ];
         }
 
@@ -130,7 +131,7 @@ class AttendanceController extends Controller
 
         return view('admin.attendances.list_by_staff', compact(
             'user',
-            'dailyData', // $attendances の代わりに $dailyData を渡す
+            'dailyData',
             'targetMonth',
             'prevMonth',
             'nextMonth'
@@ -142,13 +143,11 @@ class AttendanceController extends Controller
         try {
             $targetMonth = Carbon::parse($month . "-01");
         } catch (\Exception $e) {
-            // 不正な月の場合はエラーまたはリダイレクト
             return redirect()->back()->with('error', '無効な月が指定されました。');
         }
 
         $fileName = $user->name . '_' . $targetMonth->format('Y年m月') . '_勤怠.csv';
 
-        // ヘッダー（BOM付きUTF-8で日本語の文字化けを防ぐ）
         $headers = [
             'Content-type'        => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
@@ -157,7 +156,6 @@ class AttendanceController extends Controller
             'Expires'             => '0',
         ];
 
-        // CSVに出力するデータを取得 (ページネーションなしで全件)
         $attendancesToExport = Attendance::where('user_id', $user->id)
             ->whereYear('work_date', $targetMonth->year)
             ->whereMonth('work_date', $targetMonth->month)
@@ -167,7 +165,7 @@ class AttendanceController extends Controller
 
         $callback = function() use ($attendancesToExport) {
             $file = fopen('php://output', 'w');
-            // BOMを書き込む
+            // BOMを書き込む（日本語の文字化けを防ぐ）
             fwrite($file, "\xEF\xBB\xBF");
 
             // CSVヘッダー行
@@ -181,8 +179,8 @@ class AttendanceController extends Controller
                     $workDateCarbon->isoFormat('ddd'),
                     $attendance->clock_in_time ? Carbon::parse($attendance->clock_in_time)->format('H:i') : '-',
                     $attendance->clock_out_time ? Carbon::parse($attendance->clock_out_time)->format('H:i') : '-',
-                    $attendance->formatted_total_break_time ?? '00:00', // モデルアクセサ
-                    $attendance->formatted_total_work_time ?? '00:00',  // モデルアクセサ
+                    $attendance->formatted_total_break_time ?? '00:00',
+                    $attendance->formatted_total_work_time ?? '00:00',
                     $attendance->remarks ?? '',
                 ]);
             }

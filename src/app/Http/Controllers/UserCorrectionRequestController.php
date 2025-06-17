@@ -11,7 +11,7 @@ class UserCorrectionRequestController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $statusFilter = $request->query('status', 'pending'); // デフォルトは 'pending'
+        $statusFilter = $request->query('status', 'pending');
 
         $query = AttendanceCorrectionRequest::where('user_id', $user->id)
                                            ->with('attendance')
@@ -19,10 +19,9 @@ class UserCorrectionRequestController extends Controller
 
         if ($statusFilter === 'pending') {
             $query->where('status', 'pending');
-        } elseif ($statusFilter === 'approved') { // 「承認済み」のみを対象
+        } elseif ($statusFilter === 'approved') {
             $query->where('status', 'approved');
         }
-        // 'all' などのパラメータで全てのステータスを表示するタブも追加可能
 
         $correctionRequests = $query->paginate(10);
 

@@ -21,12 +21,11 @@ class Attendance extends Model
     ];
 
     protected $casts = [
-        'work_date' => 'date', // date型として扱う
-        'clock_in_time' => 'datetime', // datetime型として扱う
-        'clock_out_time' => 'datetime', // datetime型として扱う
+        'work_date' => 'date',
+        'clock_in_time' => 'datetime',
+        'clock_out_time' => 'datetime',
     ];
 
-    // リレーションシップ
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -34,7 +33,7 @@ class Attendance extends Model
 
     public function breaks()
     {
-        return $this->hasMany(BreakModel::class); // モデル名を BreakModel にした場合
+        return $this->hasMany(BreakModel::class);
     }
 
     // 合計休憩時間をフォーマットして取得するアクセサ (例: "01:00")
@@ -88,12 +87,12 @@ class Attendance extends Model
     }
 
     // 最新の保留中の修正申請を取得
-    public function latestPendingCorrectionRequest() // <- このメソッドです
+    public function latestPendingCorrectionRequest()
     {
         return $this->hasOne(AttendanceCorrectionRequest::class)->where('status', 'pending')->latestOfMany();
     }
 
-    // 全ての修正申請 (履歴として必要な場合)
+    // 全ての修正申請
     public function correctionRequests()
     {
         return $this->hasMany(AttendanceCorrectionRequest::class)->orderBy('created_at', 'desc');

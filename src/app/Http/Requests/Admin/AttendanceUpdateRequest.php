@@ -9,13 +9,11 @@ class AttendanceUpdateRequest extends FormRequest
 {
     public function authorize()
     {
-        // 管理者であることの確認 (ルートミドルウェアで既に行っているが、念のため)
         return $this->user() && $this->user()->is_admin;
     }
 
     public function rules()
     {
-        // ルートモデルバインディングから勤怠レコードを取得し、その work_date を使用
         $attendance = $this->route('attendance');
         $carbonWorkDate = Carbon::parse($attendance->work_date);
         $dateString = $carbonWorkDate->toDateString();
@@ -70,23 +68,16 @@ class AttendanceUpdateRequest extends FormRequest
                         $fail('休憩時間が勤務時間外です。');
                         return;
                     }
-                    // 開始・終了のペアチェックは任意 (両方入力されているか、片方だけか)
-                    // if ($startTime && !$value) { $fail(...); }
-                    // if (!$startTime && $value) { $fail(...); }
                 },
             ],
-            'remarks' => ['required', 'string', 'max:500'], // 備考を必須に
+            'remarks' => ['required', 'string', 'max:500'],
         ];
     }
 
     public function messages()
     {
-        // カスタムルール内で $fail() に直接メッセージを指定したため、
-        // ここでメッセージを定義する必要があるのは、標準ルールでメッセージを上書きしたい場合のみ。
-        // (例: 'clock_in_time.required' => '管理者は出勤時刻を必ず入力してください。' など)
         return [
             'remarks.required' => '備考を記入してください。',
-            // 'clock_out_time.after' => '出勤時間もしくは退勤時間が不適切な値です。', // もし標準の after ルールを使うなら
         ];
     }
 

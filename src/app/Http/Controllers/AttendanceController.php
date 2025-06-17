@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
 use App\Models\BreakModel;
 use App\Models\AttendanceCorrectionRequest;
-use App\Http\Requests\UserCorrectionRequestStoreRequest; // FormRequest名を修正・統一
+use App\Http\Requests\UserCorrectionRequestStoreRequest;
 use Carbon\Carbon;
-use Carbon\CarbonInterval; // 時間計算で使用
+use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 
 class AttendanceController extends Controller
@@ -22,7 +22,7 @@ class AttendanceController extends Controller
         // 今日の最新の勤怠記録を取得
         $latestAttendanceToday = Attendance::where('user_id', $user->id)
             ->where('work_date', $today)
-            ->latest('id') // 念のため最新のものを取得
+            ->latest('id')
             ->first();
 
         $status = 'unstarted'; // 未出勤
@@ -36,12 +36,12 @@ class AttendanceController extends Controller
                                   ->latest('id')
                                   ->first();
                 if ($activeBreak) {
-                    $status = 'on_break'; // 休憩中
+                    $status = 'on_break';
                 } else {
-                    $status = 'working'; // 勤務中 (出勤済み)
+                    $status = 'working';
                 }
             } else {
-                $status = 'finished_today'; // 今日の勤務終了
+                $status = 'finished_today';
             }
         }
 
@@ -64,16 +64,21 @@ class AttendanceController extends Controller
             return redirect()->route('attendances.index')->with('error', '既に出勤済みです。');
         }
 
-        // 前日の勤務が未退勤のままか確認 (オプション)
+        // 前日の勤務が未退勤のままか確認
         $yesterdayAttendanceNotClockedOut = Attendance::where('user_id', $user->id)
             ->where('work_date', Carbon::yesterday()->toDateString())
             ->whereNull('clock_out_time')
+            ->latest('id')
             ->first();
-        if ($yesterdayAttendanceNotClockedOut) {
-            // 必要であれば前日の勤務を強制的に退勤させるか、エラーにする
-            // $yesterdayAttendanceNotClockedOut->update(['clock_out_time' => Carbon::parse($yesterdayAttendanceNotClockedOut->work_date . ' 23:59:59')]);
-            // return redirect()->route('attendances.index')->with('warning', '前日の退勤打刻がありませんでした。システムで記録しました。再度出勤してください。');
-        }
+            if ($yesterdayAttendanceNotClockedOut) {
+                // 前日の勤務を強制的に退勤させる (前日の23:59:59に退勤したことにする)
+                $endOfYesterday = Carbon::parse($yesterdayAttendanceNotClockedOut->work_date)->endOfDay();
+                $yesterdayAttendanceNotClockedOut->update(['clock_out_time' => $endOfYesterday]);
+        
+                // ユーザーにメッセージを表示して、再度出勤ボタンを押してもらう
+                return redirect()->route('attendances.index')
+                                 ->with('warning', '前日の退勤打刻がありませんでした。システムにより前日23:59に退勤処理を行いました。本日の出勤を再度行ってください。');
+            }
 
 
         Attendance::create([
@@ -91,7 +96,6 @@ class AttendanceController extends Controller
         $today = Carbon::today()->toDateString();
         $now = Carbon::now();
 
-        // 今日の最新の未退勤の勤怠記録を取得
         $attendance = Attendance::where('user_id', $user->id)
             ->where('work_date', $today)
             ->whereNull('clock_out_time')
@@ -102,7 +106,7 @@ class AttendanceController extends Controller
             return redirect()->route('attendances.index')->with('error', '出勤記録がありません。');
         }
 
-        // 休憩中であれば、先に休憩を終了させる (休憩終了時刻を退勤時刻と同じにするか、エラーにするか)
+        // 休憩中であれば、先に休憩を終了させる (システム上、あり得ないが念のため)
         $activeBreak = BreakModel::where('attendance_id', $attendance->id)
                           ->whereNull('break_end_time')
                           ->latest('id')
@@ -125,7 +129,6 @@ class AttendanceController extends Controller
         $today = Carbon::today()->toDateString();
         $now = Carbon::now();
 
-        // 今日の最新の未退勤の勤怠記録を取得
         $attendance = Attendance::where('user_id', $user->id)
             ->where('work_date', $today)
             ->whereNull('clock_out_time')
@@ -160,7 +163,6 @@ class AttendanceController extends Controller
         $today = Carbon::today()->toDateString();
         $now = Carbon::now();
 
-        // 今日の最新の未退勤の勤怠記録を取得
         $attendance = Attendance::where('user_id', $user->id)
             ->where('work_date', $today)
             ->whereNull('clock_out_time')
@@ -168,11 +170,9 @@ class AttendanceController extends Controller
             ->first();
 
         if (!$attendance) {
-            // 通常、この状態にはなり得ないが念のため
             return redirect()->route('attendances.index')->with('error', '出勤記録がありません。');
         }
 
-        // 最新の未終了の休憩記録を取得
         $activeBreak = BreakModel::where('attendance_id', $attendance->id)
                           ->whereNull('break_end_time')
                           ->latest('id')
@@ -192,7 +192,7 @@ class AttendanceController extends Controller
     public function list(Request $request)
     {
         $user = Auth::user();
-        // リクエストから 'month' パラメータを取得。なければ現在の年月を使用 (YYYY-MM形式)
+
         $targetMonthInput = $request->input('month', Carbon::now()->format('Y-m'));
         try {
             $targetMonth = Carbon::parse($targetMonthInput)->startOfMonth();
@@ -204,21 +204,20 @@ class AttendanceController extends Controller
         $firstDayOfMonth = $targetMonth->copy();
         $lastDayOfMonth = $targetMonth->copy()->endOfMonth();
 
-        // 指定された月の全ての日付を生成
         $period = CarbonPeriod::create($firstDayOfMonth, $lastDayOfMonth);
         $datesInMonth = [];
         foreach ($period as $date) {
-            $datesInMonth[] = $date->copy(); // Carbonインスタンスとして保持
+            $datesInMonth[] = $date->copy();
         }
 
-        // ログインユーザーの指定された月の勤怠記録を取得し、日付をキーにした連想配列に変換
+        // ログインユーザーの指定された月の勤怠記録を取得し、日付をキーにした連想配列に整理
         $attendancesRecords = Attendance::where('user_id', $user->id)
             ->whereBetween('work_date', [$firstDayOfMonth->toDateString(), $lastDayOfMonth->toDateString()])
             ->with('breaks')
             ->orderBy('work_date', 'asc')
             ->get()
             ->keyBy(function ($item) {
-                return Carbon::parse($item->work_date)->toDateString(); // YYYY-MM-DD 形式の文字列をキーに
+                return Carbon::parse($item->work_date)->toDateString();
             });
 
         // ビューに渡すための日毎のデータ配列を作成
@@ -226,8 +225,8 @@ class AttendanceController extends Controller
         foreach ($datesInMonth as $date) {
             $dateString = $date->toDateString();
             $dailyData[] = [
-                'date' => $date, // Carbonインスタンス
-                'attendance' => $attendancesRecords->get($dateString) // 該当日の勤怠データ (なければnull)
+                'date' => $date,
+                'attendance' => $attendancesRecords->get($dateString)
             ];
         }
 
@@ -235,7 +234,7 @@ class AttendanceController extends Controller
         $nextMonth = $targetMonth->copy()->addMonth()->format('Y-m');
 
         return view('attendances.list', compact(
-            'dailyData', // $attendances の代わりに $dailyData を渡す
+            'dailyData',
             'targetMonth',
             'prevMonth',
             'nextMonth'
@@ -269,7 +268,7 @@ class AttendanceController extends Controller
                 ];
             }
         }
-        // 常に少なくとも1セットは表示・入力できるようにする
+
         if (empty($displayBreaks)) {
             $displayBreaks[] = (object)['start' => null, 'end' => null];
         }
@@ -304,12 +303,11 @@ class AttendanceController extends Controller
                     'start' => $startTime,
                     'end' => $endTime,
                 ];
-            } elseif (!empty($startTime) && empty($endTime)) { // 開始のみ入力された場合
+            } elseif (!empty($startTime) && empty($endTime)) {
                  $requestedBreakDetails[] = ['start' => $startTime, 'end' => null];
-            } elseif (empty($startTime) && !empty($endTime)) { // 終了のみ入力された場合 (通常はエラーだが、ここではデータとして保持)
+            } elseif (empty($startTime) && !empty($endTime)) {
                  $requestedBreakDetails[] = ['start' => null, 'end' => $endTime];
             }
-            // 両方空の場合は追加しない
         }
 
         AttendanceCorrectionRequest::create([
@@ -321,9 +319,6 @@ class AttendanceController extends Controller
             'requested_note' => $request->input('requested_note'),
             'status' => 'pending',
         ]);
-
-        // 勤怠記録自体の備考も更新する場合はここで行う
-        // $attendance->update(['remarks' => $request->input('some_other_remarks_field_if_any')]);
 
         return redirect()->route('attendances.show', $attendance)
             ->with('status', '勤怠修正を申請しました。');

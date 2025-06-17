@@ -1,11 +1,9 @@
 .admin-attendance-list-container {
     width: 90%;
     max-width: 1100px;
-    /* 少し広めでも良いかも */
     margin: 30px auto;
     padding: 20px;
     background-color: #f0f2f5;
-    /* 背景色 */
 }
 
 .page-title {
@@ -30,7 +28,6 @@
 
 .date-picker-input {
     font-size: 1.2em;
-    /* 日付表示を大きく */
     font-weight: bold;
     margin: 0 20px;
     color: #333;
@@ -39,9 +36,7 @@
     padding: 5px 10px;
     background-color: transparent;
     cursor: pointer;
-    /* クリックできることを示す */
     width: 150px;
-    /* 幅を調整 */
 }
 
 .date-picker-input:focus {
@@ -89,7 +84,6 @@
 }
 
 .attendance-table th:first-child,
-/* 名前列は左寄せ */
 .attendance-table td:first-child {
     text-align: left;
 }

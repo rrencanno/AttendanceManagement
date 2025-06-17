@@ -49,27 +49,12 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        // RegisterRequestでバリデーションは実行されます。
-
-        // FortifyのCreateNewUserアクションを呼び出してユーザーを作成
-        // このアクションは app/Actions/Fortify/CreateNewUser.php にあります。
-        // 必要であれば、このファイルを編集して is_admin フラグなどを調整できますが、
-        // 今回は従業員登録なので、デフォルトで is_admin = false で問題ないでしょう。
         $user = $this->creator->create($request->validated());
 
-        // 登録イベントを発行します。
-        // これにより、MustVerifyEmailインターフェースをUserモデルが実装していれば、
-        // 自動的にメール認証メールが送信されます。
         event(new Registered($user));
 
-        // 作成されたユーザーでログインさせます。
         Auth::login($user);
 
-        // 登録後のリダイレクト先。
-        // Fortifyは通常、メール認証が必要な場合は /email/verify (verification.notice ルート) へ
-        // リダイレクトします。それが設定されていれば、config('fortify.home') に従います。
-        // ここではFortifyのリダイレクトロジックに任せるため、
-        // Fortifyのデフォルトのホームリダイレクト先を指定します。
         return redirect(config('fortify.home'));
     }
 }

@@ -22,10 +22,9 @@ class AttendanceCorrectionRequest extends Model
     protected $casts = [
         'requested_clock_in_time' => 'datetime',
         'requested_clock_out_time' => 'datetime',
-        'requested_break_details' => 'array', // JSONカラムを配列として扱う
+        'requested_break_details' => 'array',
     ];
 
-    // リレーションシップ
     public function attendance()
     {
         return $this->belongsTo(Attendance::class);

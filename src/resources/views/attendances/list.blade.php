@@ -34,9 +34,18 @@
                     <td>{{ $day['date']->isoFormat('MM/DD(ddd)') }}</td>
                     @if ($day['attendance']) {{-- その日の勤怠データがある場合 --}}
                         <td>{{ $day['attendance']->clock_in_time ? \Carbon\Carbon::parse($day['attendance']->clock_in_time)->format('H:i') : '' }}</td>
-                        <td>{{ $day['attendance']->clock_out_time ? \Carbon\Carbon::parse($day['attendance']->clock_out_time)->format('H:i') : '' }}</td>
-                        <td>{{ $day['attendance']->formatted_total_break_time ?: '' }}</td>
-                        <td>{{ $day['attendance']->formatted_total_work_time ?: '' }}</td>
+
+                        {{-- 退勤、休憩、合計の表示を clock_out_time の有無で分岐 --}}
+                        @if ($day['attendance']->clock_out_time)
+                            <td>{{ \Carbon\Carbon::parse($day['attendance']->clock_out_time)->format('H:i') }}</td>
+                            <td>{{ $day['attendance']->formatted_total_break_time ?: '' }}</td>
+                            <td>{{ $day['attendance']->formatted_total_work_time ?: '' }}</td>
+                        @else
+                            <td></td> {{-- 退勤: 空白 --}}
+                            <td></td> {{-- 休憩: 空白 --}}
+                            <td></td> {{-- 合計: 空白 --}}
+                        @endif
+
                         <td>
                             @if ($day['attendance']->clock_in_time) {{-- 出勤記録がある場合のみ詳細ボタン表示 --}}
                                 <a href="{{ route('attendances.show', ['attendance' => $day['attendance']->id, 'return_month' => $targetMonth->format('Y-m')]) }}" class="btn-detail">詳細</a>

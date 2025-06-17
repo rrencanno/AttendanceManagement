@@ -23,7 +23,7 @@ class CreateAttendanceCorrectionRequestsTable extends Migration
                   ->onDelete('cascade');
             $table->dateTime('requested_clock_in_time')->nullable();
             $table->dateTime('requested_clock_out_time')->nullable();
-            $table->json('requested_break_details')->nullable(); // 休憩情報の修正
+            $table->json('requested_break_details')->nullable();
             $table->text('requested_note')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();

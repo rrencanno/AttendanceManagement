@@ -63,6 +63,11 @@
             {{ session('error') }}
         </div>
     @endif
+    @if (session('warning'))
+        <div class="alert alert-warning mt-3">
+            {{ session('warning') }}
+        </div>
+    @endif
 </div>
 
 <script>

@@ -23,10 +23,10 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                if ($request->routeIs('admin.*') && Auth::user()->is_admin) { // 管理者ルートで、かつ管理者なら
-                    return redirect(route('admin.attendances.list')); // 管理者用ホームへ
+                if ($request->routeIs('admin.*') && Auth::user()->is_admin) {
+                    return redirect(route('admin.attendances.list'));
                 }
-                return redirect(config('fortify.home')); // それ以外は一般ユーザー用ホームへ
+                return redirect(config('fortify.home'));
             }
         }
 

@@ -18,10 +18,9 @@ class UserSeeder extends Seeder
         User::factory()->admin()->create([
             'name' => '管理者 太郎',
             'email' => 'admin@example.com',
-            // passwordはfactoryで'password'が設定される
         ]);
 
-        // 一般ユーザー (例: 10名作成)
+        // 一般ユーザー (10名作成)
         User::factory()->count(10)->create();
 
         // 特定のテスト用一般ユーザー (ログインしやすいように)

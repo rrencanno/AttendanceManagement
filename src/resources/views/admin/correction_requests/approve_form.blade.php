@@ -27,16 +27,10 @@
             <span class="item-label">日付</span>
             <span class="item-value">
                 {{ \Carbon\Carbon::parse($correction_request->attendance->work_date)->isoFormat('YYYY年') }}
-                     {{-- スペースで間隔調整 --}}
+                     
                 {{ \Carbon\Carbon::parse($correction_request->attendance->work_date)->isoFormat('M月D日') }}
             </span>
         </div>
-        {{-- 「申請日時」は画像にないのでコメントアウト（必要なら戻す）
-        <div class="detail-row">
-            <span class="item-label">申請日時</span>
-            <span class="item-value">{{ \Carbon\Carbon::parse($correction_request->created_at)->isoFormat('YYYY年M月D日 HH:mm') }}</span>
-        </div>
-        --}}
 
         <div class="detail-row">
             <span class="item-label">出勤・退勤</span>
@@ -49,19 +43,9 @@
 
         @php $breakDisplayedCount = 0; @endphp
         @foreach ($requestedBreaks as $index => $break)
-            @if ($break->start && $break->end) {{-- startとendが両方ある場合のみ表示 --}}
+            @if ($break->start || $break->end)
                 <div class="detail-row">
                     <span class="item-label">休憩{{ $breakDisplayedCount > 0 ? ' ' . ($breakDisplayedCount + 1) : '' }}</span>
-                    <span class="item-value time-display">
-                        {{ \Carbon\Carbon::createFromTimeString($break->start)->format('H:i') }}
-                        <span class="time-separator">〜</span>
-                        {{ \Carbon\Carbon::createFromTimeString($break->end)->format('H:i') }}
-                    </span>
-                </div>
-                @php $breakDisplayedCount++; @endphp
-            @elseif ($break->start || $break->end) {{-- 片方だけの場合も表示を試みる（またはエラーとして扱う） --}}
-                 <div class="detail-row">
-                    <span class="item-label">休憩{{ $breakDisplayedCount > 0 ? ' ' . ($breakDisplayedCount + 1) : '' }} (不完全)</span>
                     <span class="item-value time-display">
                         {{ $break->start ? \Carbon\Carbon::createFromTimeString($break->start)->format('H:i') : '-' }}
                         <span class="time-separator">〜</span>
@@ -71,9 +55,9 @@
                 @php $breakDisplayedCount++; @endphp
             @endif
         @endforeach
-        {{-- もし全ての休憩が空で、かつ画像のように空の「休憩2」を表示したい場合 --}}
+        
+        {{-- 空の休憩欄の表示ロジック --}}
         @if ($breakDisplayedCount < 2 && empty($correction_request->requested_break_details) && count($requestedBreaks) === 1 && !$requestedBreaks[0]->start && !$requestedBreaks[0]->end)
-            {{-- 休憩が1つも表示されておらず、画像のように空の「休憩」欄や「休憩2」欄が必要な場合の対応 --}}
             @if($breakDisplayedCount === 0)
             <div class="detail-row">
                 <span class="item-label">休憩</span>
@@ -84,7 +68,7 @@
                 </span>
             </div>
             @endif
-            <div class="detail-row"> {{-- 画像の「休憩2」を常に表示する場合（データがなくても） --}}
+            <div class="detail-row">
                 <span class="item-label">休憩 2</span>
                 <span class="item-value time-display">
                     <span class="empty-time-box"></span>
@@ -92,7 +76,7 @@
                     <span class="empty-time-box"></span>
                 </span>
             </div>
-        @elseif ($breakDisplayedCount === 1) {{-- 休憩が1つだけ表示された場合、空の「休憩2」を追加 --}}
+        @elseif ($breakDisplayedCount === 1)
              <div class="detail-row">
                 <span class="item-label">休憩 2</span>
                 <span class="item-value time-display">
@@ -107,7 +91,7 @@
         <div class="detail-row remarks-row">
             <span class="item-label">備考</span>
             <span class="item-value remarks-display-box">
-                {{ $correction_request->requested_note ?: '' }}
+                {!! nl2br(e($correction_request->requested_note ?: '')) !!}
             </span>
         </div>
     </div>

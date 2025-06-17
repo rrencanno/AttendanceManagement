@@ -12,15 +12,12 @@ class UserCorrectionRequestStoreRequest extends FormRequest
     public function authorize()
     {
         $attendance = $this->route('attendance');
-        // $attendance が Attendance インスタンスであることを確認し、user_id をチェック
         return $attendance instanceof Attendance && $attendance->user_id == Auth::id();
     }
 
     public function rules()
     {
-        // $workDate は Carbon インスタンスとして取得
         $carbonWorkDate = Carbon::parse($this->route('attendance')->work_date);
-        // 日付部分のみ (Y-m-d 形式の文字列) を取得
         $dateString = $carbonWorkDate->toDateString();
 
         return [
@@ -28,14 +25,9 @@ class UserCorrectionRequestStoreRequest extends FormRequest
             'clock_out_time' => [
                 'required',
                 'date_format:H:i',
-                // 'after' ルールは時刻のみの比較だと日付を跨ぐ場合に意図通りにならないことがあるので注意。
-                // 今回は同じ日の中での比較なので、'H:i' 形式なら問題ないことが多いが、
-                // より厳密にはカスタムルールで日付と時刻を結合して比較する。
-                // ここではメッセージ変更が主なので、ルール自体は維持する。
                 function ($attribute, $value, $fail) {
                     $clockInTime = $this->input('clock_in_time');
                     if ($clockInTime && strtotime($value) <= strtotime($clockInTime)) {
-                        // メッセージは messages() メソッドで設定するので、ここではキーを意識する
                         $fail('出勤時間もしくは退勤時間が不適切な値です。');
                     }
                 },
@@ -44,7 +36,7 @@ class UserCorrectionRequestStoreRequest extends FormRequest
             'break_start_time.*' => [
                 'nullable',
                 'date_format:H:i',
-                function ($attribute, $value, $fail) use ($dateString) { // $workDate の代わりに $dateString を使用
+                function ($attribute, $value, $fail) use ($dateString) {
                     $clockInFull = $this->input('clock_in_time') ? Carbon::parse($dateString . ' ' . $this->input('clock_in_time')) : null;
                     $clockOutFull = $this->input('clock_out_time') ? Carbon::parse($dateString . ' ' . $this->input('clock_out_time')) : null;
                     $breakStartFull = $value ? Carbon::parse($dateString . ' ' . $value) : null;
@@ -63,7 +55,7 @@ class UserCorrectionRequestStoreRequest extends FormRequest
             'break_end_time.*'   => [
                 'nullable',
                 'date_format:H:i',
-                function ($attribute, $value, $fail) use ($dateString) { // $workDate の代わりに $dateString を使用
+                function ($attribute, $value, $fail) use ($dateString) {
                     $index = explode('.', $attribute)[1];
                     $startTime = $this->input('break_start_time.' . $index);
                     $breakEndFull = $value ? Carbon::parse($dateString . ' ' . $value) : null;
@@ -80,20 +72,14 @@ class UserCorrectionRequestStoreRequest extends FormRequest
                     }
                 },
             ],
-            'requested_note' => ['required', 'string', 'max:500'], // 備考
+            'requested_note' => ['required', 'string', 'max:500'],
         ];
     }
 
     public function messages()
     {
         return [
-            // 'clock_out_time.after_or_equal_clock_in' => '出勤時間もしくは退勤時間が不適切な値です。', // clock_out_time のカスタムルールキーに対するメッセージ
-            // 'clock_out_time.after' => '出勤時間もしくは退勤時間が不適切な値です。', // もし after ルールを直接使う場合のメッセージ
             'requested_note.required' => '備考を記入してください。',
-            // 休憩時間のカスタムルールで $fail() に直接メッセージを指定したため、ここでは不要
-            // もしキーで指定した場合はここに追加
-            // 'break_start_time.*.in_work_hours' => '休憩時間が勤務時間外です。',
-            // 'break_end_time.*.in_work_hours' => '休憩時間が勤務時間外です。',
         ];
     }
 

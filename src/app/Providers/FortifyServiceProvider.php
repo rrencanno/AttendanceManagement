@@ -31,14 +31,13 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.login');
         });
 
-        // 他のビューの定義 (登録画面など) も同様に設定できます
         Fortify::registerView(function () {
             return view('auth.register');
         });
 
         // メール認証が必要な場合の通知ビュー
         Fortify::verifyEmailView(function () {
-            return view('auth.verify-email'); // 後で作成するビュー
+            return view('auth.verify-email');
         });
 
 
@@ -50,7 +49,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             \Laravel\Fortify\Contracts\LogoutResponse::class,
-            \App\Http\Responses\CustomLogoutResponse::class // 後で作成します
+            \App\Http\Responses\CustomLogoutResponse::class
         );
     }
 }
