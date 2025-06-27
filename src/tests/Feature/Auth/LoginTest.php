@@ -15,12 +15,10 @@ class LoginTest extends TestCase
 
     protected $user;
 
-    // 各テストの前に実行されるセットアップメソッド
     protected function setUp(): void
     {
         parent::setUp();
 
-        // テスト用のユーザーを事前に作成・保存
         $this->user = User::factory()->create([
             'password' => 'password123',
         ]);
@@ -32,15 +30,12 @@ class LoginTest extends TestCase
      */
     public function email_is_required_for_login()
     {
-        $response = $this->post(route('login'), [ // Fortifyのログインルートを想定
-            'email' => '', // メールアドレスを空にする
+        $response = $this->post(route('login'), [
+            'email' => '',
             'password' => 'password123',
         ]);
 
         $response->assertSessionHasErrors('email');
-        // 具体的なメッセージをテストする場合 (言語ファイルに依存)
-        // $errors = session('errors');
-        // $this->assertEquals('メールアドレスを入力してください。', $errors->first('email'));
     }
 
     /**
@@ -51,13 +46,10 @@ class LoginTest extends TestCase
     {
         $response = $this->post(route('login'), [
             'email' => $this->user->email,
-            'password' => '', // パスワードを空にする
+            'password' => '',
         ]);
 
         $response->assertSessionHasErrors('password');
-        // 具体的なメッセージをテストする場合 (言語ファイルに依存)
-        // $errors = session('errors');
-        // $this->assertEquals('パスワードを入力してください。', $errors->first('password'));
     }
 
     /**
@@ -71,16 +63,12 @@ class LoginTest extends TestCase
             'password' => 'password123',
         ]);
 
-        // Fortifyのデフォルトでは、認証失敗は 'email' フィールドにエラーが紐づく
         $response->assertSessionHasErrors('email');
-        // 具体的なメッセージをテストする場合 (言語ファイルに依存)
-        // $errors = session('errors');
-        // $this->assertEquals('ログイン情報が登録されていません。', $errors->first('email'));
     }
 
     /**
      * @test
-     * 登録内容と一致しない場合（誤ったパスワード）に認証エラーが表示されることを確認 (追加テスト)
+     * 登録内容と一致しない場合（誤ったパスワード）に認証エラーが表示されることを確認
      */
     public function login_fails_with_incorrect_password()
     {
@@ -105,42 +93,37 @@ class LoginTest extends TestCase
         ]);
 
         $this->assertAuthenticatedAs($this->user); // 指定したユーザーとして認証されたか
-        // リダイレクト先は config('fortify.home') またはメール認証が有効なら verification.notice
-        // メール認証済みのユーザーをテストで使う場合は、Factoryで email_verified_at を設定するか、
-        // 登録テストと同様に verification.notice へのリダイレクトを期待する
-        // ここでは、認証が成功し、意図した場所へリダイレクトされることを確認
+
         $response->assertRedirect(config('fortify.home'));
     }
 
     /**
      * @test
-     * ログインページが正しく表示されることを確認 (追加テスト)
+     * ログインページが正しく表示されることを確認
      */
     public function login_page_can_be_rendered()
     {
         $response = $this->get(route('login'));
         $response->assertStatus(200);
-        $response->assertViewIs('auth.login'); // Fortifyのデフォルトビュー名か、カスタマイズしたビュー名
+        $response->assertViewIs('auth.login');
     }
 
     /**
      * @test
-     * 認証済みのユーザーはログインページにアクセスできない (guestミドルウェアのテスト) (追加テスト)
+     * 認証済みのユーザーはログインページにアクセスできない
      */
     public function authenticated_user_cannot_access_login_page()
     {
-        // $this->actingAs($this->user); // setupで作成したユーザーとしてログイン状態にする
-        // または
-        $user = User::factory()->create(); // 別のユーザーを作成しても良い
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         $response = $this->get(route('login'));
-        $response->assertRedirect(config('fortify.home')); // ホームにリダイレクトされることを期待
+        $response->assertRedirect(config('fortify.home'));
     }
 
     /**
      * @test
-     * ログアウトできることを確認 (追加テスト)
+     * ログアウトできることを確認
      */
     public function user_can_logout()
     {
@@ -148,7 +131,7 @@ class LoginTest extends TestCase
 
         $response = $this->post(route('logout'));
 
-        $this->assertGuest(); // ログアウトしてゲスト状態になったか
+        $this->assertGuest();
         $response->assertRedirect(route('login'));
     }
 }

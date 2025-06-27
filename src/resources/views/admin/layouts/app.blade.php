@@ -13,24 +13,18 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                {{-- 管理者としてログインしている場合、管理者ダッシュボードや勤怠一覧へリンク --}}
-                <a href="{{ route('admin.attendances.list') }}" class="logo-link"> {{-- 仮: 管理者勤怠一覧のルート名 --}}
+                <a href="{{ route('admin.attendances.list') }}" class="logo-link">
                     <img src="{{ asset('storage/logo.svg') }}" alt="COACHTECHロゴ">
                 </a>
             </div>
 
-            {{-- 管理者としてログインしているかチェック --}}
-            {{-- is_admin を使う場合は Auth::check() && Auth::user()->is_admin --}}
-            {{-- もし admin ガードを使うなら @auth('admin') --}}
             @if (Auth::check() && Auth::user()->is_admin)
             <nav class="header-nav">
                 <ul>
-                    {{-- 各ルート名は admin.xxxx.yyyy のようなプレフィックスを付けると管理しやすい --}}
                     <li><a href="{{ route('admin.attendances.list') }}" class="nav-link {{ request()->routeIs('admin.attendances.list') ? 'active' : '' }}">勤怠一覧</a></li>
                     <li><a href="{{ route('admin.staff.list') }}" class="nav-link {{ request()->routeIs('admin.staff.list') ? 'active' : '' }}">スタッフ一覧</a></li>
                     <li><a href="{{ route('admin.correction_requests.index') }}" class="nav-link {{ request()->routeIs('admin.correction_requests.index*') ? 'active' : '' }}">申請一覧</a></li>
                     <li>
-                        {{-- 管理者ログアウトのルートを指定 --}}
                         <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
                             <button type="submit" class="btn-logout">ログアウト</button>
@@ -46,6 +40,7 @@
         @yield('content')
     </main>
 
-    @stack('scripts') {{-- ページ個別のJavaScript用に @stack も用意しておくと便利 --}}
+    @stack('scripts')
+    
 </body>
 </html>

@@ -11,20 +11,19 @@
             <h2>ログイン</h2>
         </div>
 
-        {{-- セッションに 'status' メッセージがあれば表示 (例: パスワードリセット成功後など) --}}
         @if (session('status'))
             <div class="alert alert-success" role="alert">
                 {{ session('status') }}
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" novalidate>
             @csrf
 
             <div class="form-group">
                 <label for="email">メールアドレス</label>
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autofocus>
-                @error('email') {{-- 認証失敗時のメッセージもここに表示される --}}
+                @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -39,14 +38,6 @@
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
-            </div>
-
-            {{-- 「ログイン状態を保存する」チェックボックスを追加 --}}
-            <div class="form-group remember-me-group">
-                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                <label class="form-check-label" for="remember">
-                    ログイン状態を保存する
-                </label>
             </div>
 
             <div class="form-group">

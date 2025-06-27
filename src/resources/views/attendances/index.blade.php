@@ -48,7 +48,8 @@
                 @csrf
                 <button type="submit" class="btn btn-break-end">休憩戻</button>
             </form>
-        @elseif($status == 'finished_today') {{-- 今日の勤務終了後 --}}
+        @elseif($status == 'finished_today')
+            {{-- 勤務終了メッセージ --}}
             <p class="work-finished-message">お疲れ様でした。</p>
         @endif
     </div>
@@ -75,10 +76,9 @@
         const now = new Date();
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
-        // const seconds = String(now.getSeconds()).padStart(2, '0'); // 秒も表示する場合
         document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
     }
-    setInterval(updateTime, 1000); // 1秒ごとに更新
-    updateTime(); // 初期表示
+    setInterval(updateTime, 1000);
+    updateTime();
 </script>
 @endsection

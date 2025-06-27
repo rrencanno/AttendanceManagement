@@ -47,7 +47,7 @@
                         @endif
 
                         <td>
-                            @if ($day['attendance']->clock_in_time) {{-- 出勤記録がある場合のみ詳細ボタン表示 --}}
+                            @if ($day['attendance']->clock_in_time)
                                 <a href="{{ route('attendances.show', ['attendance' => $day['attendance']->id, 'return_month' => $targetMonth->format('Y-m')]) }}" class="btn-detail">詳細</a>
                             @else
                                 {{-- 詳細ボタンも表示しない場合は空 --}}
@@ -63,7 +63,7 @@
                 </tr>
                 @endforeach
             @else
-                {{-- この分岐は基本的には通らないはず (dailyDataは必ずその月の日数分ある) --}}
+                {{-- この分岐は基本的には通らないはず --}}
                 <tr>
                     <td colspan="6" class="no-records">表示できるデータがありません。</td>
                 </tr>

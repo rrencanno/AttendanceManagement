@@ -33,7 +33,7 @@ class ClockInTest extends TestCase
         // 1. 勤怠打刻画面を開き、「出勤」ボタンが表示されていることを確認
         $this->get(route('attendances.index'))
             ->assertOk()
-            ->assertSee('出勤'); // ボタンのテキストを確認
+            ->assertSee('出勤');
 
         // 2. 出勤処理を行う
         $response = $this->post(route('attendances.clockin'));
@@ -42,17 +42,16 @@ class ClockInTest extends TestCase
         $this->assertDatabaseHas('attendances', [
             'user_id' => $user->id,
             'work_date' => Carbon::today()->toDateString(),
-            // 'clock_in_time' は now() なので厳密な比較は難しいが、存在を確認
         ]);
         $latestAttendance = Attendance::where('user_id', $user->id)->latest()->first();
         $this->assertNotNull($latestAttendance->clock_in_time);
-        $this->assertNull($latestAttendance->clock_out_time); // 退勤はまだ
+        $this->assertNull($latestAttendance->clock_out_time);
 
         // 4. 勤怠打刻画面にリダイレクトされ、ステータスが変更されていることを確認
         $response->assertRedirect(route('attendances.index'));
         $this->get(route('attendances.index'))
             ->assertOk()
-            ->assertSee('出勤中'); // ステータスが「出勤中」になっていることを確認
+            ->assertSee('出勤中');
     }
 
     /**
@@ -73,14 +72,12 @@ class ClockInTest extends TestCase
         // 2. 勤怠打刻画面を開き、出勤ボタンが表示されないことを確認
         $this->get(route('attendances.index'))
             ->assertOk()
-            ->assertDontSee('出勤'); // 「出勤」ボタンのテキストがないことを確認
-            // Bladeのロジックによっては「お疲れ様でした。」が表示されるはず
+            ->assertDontSee('出勤');
     }
 
     /**
      * @test
      * 出勤は一日一回のみできる (既に出勤中の場合、再度出勤処理を試みるとエラーまたはリダイレクト)
-     * (AttendanceController@clockIn のロジックに依存)
      */
     public function user_cannot_clock_in_if_already_clocked_in_today_and_not_clocked_out()
     {
@@ -98,7 +95,7 @@ class ClockInTest extends TestCase
 
         // AttendanceController@clockIn で既に出勤済みの場合のリダイレクトとエラーメッセージを確認
         $response->assertRedirect(route('attendances.index'));
-        $response->assertSessionHas('error', '既に出勤済みです。'); // コントローラーで設定したエラーメッセージを確認
+        $response->assertSessionHas('error', '既に出勤済みです。'); // コントローラーで設定したエラーメッセージ
 
         // データベースに出勤記録が重複して作成されていないことを確認
         $this->assertEquals(1, Attendance::where('user_id', $user->id)->where('work_date', Carbon::today()->toDateString())->count());
@@ -107,8 +104,7 @@ class ClockInTest extends TestCase
 
     /**
      * @test
-     * 出勤時刻がデータベースで確認できる (user_can_clock_in_when_status_is_unstarted で一部カバー済み)
-     * ここでは、出勤処理後のデータベース状態をより直接的に確認する
+     * 出勤時刻がデータベースで確認できる
      */
     public function clock_in_time_is_recorded_in_database()
     {
@@ -130,7 +126,7 @@ class ClockInTest extends TestCase
         $this->assertNotNull($attendance, 'Attendance record not found.');
         $this->assertNotNull($attendance->clock_in_time, 'Clock-in time is not recorded.');
 
-        // clock_in_time が Dateime 型であることを確認 (モデルのキャストに依存)
+        // clock_in_time が Dateime 型であることを確認
         $this->assertInstanceOf(Carbon::class, Carbon::parse($attendance->clock_in_time));
 
         // 記録された出勤時刻が、処理実行時の時刻の範囲内にあることを確認 (数秒の誤差を許容)

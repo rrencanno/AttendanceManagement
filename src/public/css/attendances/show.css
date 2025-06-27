@@ -1,93 +1,57 @@
 .attendance-detail-container {
     width: 90%;
-    /* または固定幅: max-width: 700px; */
     max-width: 700px;
-    /* 画像の幅に合わせる、または好みの幅 */
     margin: 30px auto;
-    /* 上下マージンと中央寄せ */
     padding: 20px;
     background-color: #f0f2f5;
-    /* 画像の背景色 (薄いグレー) */
-    /* 必要に応じて border-radius や box-shadow を追加 */
-    /* border-radius: 8px; */
-    /* box-shadow: 0 4px 8px rgba(0,0,0,0.05); */
 }
 
-/* ページタイトル */
 .page-title {
     font-size: 1.8em;
-    /* 文字サイズを調整 */
     font-weight: bold;
     color: #333;
-    /* 文字色 */
     margin-bottom: 30px;
-    /* 下のマージン */
     padding-left: 10px;
-    /* 左のパディング */
     border-left: 5px solid #333;
-    /* タイトルの左側の線 */
 }
 
-/* 詳細情報カード */
 .detail-card {
     background-color: #fff;
-    /* カードの背景色 (白) */
     border-radius: 8px;
-    /* 角丸 */
     padding: 25px 30px;
-    /* 内側のパディング */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    /* 軽い影 */
     margin-bottom: 30px;
-    /* カードの下のマージン */
 }
 
-/* 詳細項目 (名前、日付、出勤・退勤など) */
 .detail-item {
     display: flex;
-    /* ラベルと値を横並びにする */
     align-items: center;
-    /* 縦方向中央揃え */
     padding: 15px 0;
-    /* 上下のパディング */
     border-bottom: 1px solid #eee;
-    /* 各項目の区切り線 */
 }
 
 .detail-item:last-child {
     border-bottom: none;
-    /* 最後の項目は区切り線なし */
 }
 
-/* ラベル (名前、日付など) */
 .item-label {
     width: 120px;
-    /* ラベルの幅を固定 */
     font-weight: 500;
-    /* 文字の太さ */
     color: #555;
-    /* 文字色 */
     flex-shrink: 0;
-    /* 幅が縮まないようにする */
 }
 
-/* 値 (実際の名前、日付、入力フィールドなど) */
 .item-value {
     flex-grow: 1;
-    /* 残りの幅をすべて使う */
     color: #333;
-    /* 文字色 */
     font-size: 1em;
-    /* 文字サイズ */
 }
 
-/* 出勤・退勤時間の入力欄コンテナ */
 .item-value.time-inputs {
     display: flex;
     align-items: center;
 }
 
-/* 時刻入力フィールドと備考テキストエリア */
 .item-value input[type="time"],
 .item-value textarea {
     padding: 8px 10px;
@@ -95,77 +59,56 @@
     border-radius: 4px;
     font-size: 0.95em;
     background-color: #fff;
-    /* 入力欄の背景色 */
 }
 
 .item-value input[type="time"] {
     width: 120px;
-    /* 時刻入力フィールドの幅 */
 }
 
 .item-value textarea {
     width: 100%;
-    /* テキストエリアの幅を親要素に合わせる */
     box-sizing: border-box;
-    /* padding と border を幅に含める */
     resize: vertical;
-    /* 縦方向のみリサイズ可能にする */
     min-height: 60px;
-    /* 最小の高さ */
 }
 
-/* 時刻入力の間の「〜」 */
 .time-separator {
     margin: 0 10px;
     color: #555;
 }
 
-/* 休憩セクション特有のスタイル */
 .breaks-section .item-label {
     align-self: flex-start;
-    /* 「休憩」ラベルを上端に配置 */
     padding-top: 4px;
-    /* input[type="time"] のパディングと高さを考慮して微調整 */
 }
 
 .breaks-section .item-value {
-    /* #breakTimesContainer の親 */
     display: flex;
     flex-direction: column;
-    /* 休憩入力グループと「休憩追加」ボタンを縦に並べる */
     align-items: flex-start;
-    /* 左寄せ */
     gap: 10px;
-    /* 休憩入力グループと「休憩追加」ボタンの間の隙間 */
 }
 
 #breakTimesContainer {
     display: flex;
     flex-direction: column;
-    /* 各休憩入力グループを縦に並べる */
     gap: 10px;
-    /* 休憩入力グループ間の隙間 */
     width: 100%;
-    /* 必要に応じて幅を指定 */
 }
 
 .break-time-group {
     display: flex;
     align-items: center;
     gap: 5px;
-    /* 入力欄と「〜」と削除ボタンの間隔 */
 }
 
 .break-time-group input[type="time"] {
     width: 110px;
-    /* 時刻入力欄の幅を少し小さめに */
 }
 
-/* 休憩追加ボタンと削除ボタン */
 .btn-add-break,
 .btn-remove-break {
     background-color: #6c757d;
-    /* ボタン背景色 (グレー系) */
     color: white;
     border: none;
     padding: 5px 10px;
@@ -176,90 +119,68 @@
 
 .btn-remove-break {
     background-color: #dc3545;
-    /* 削除ボタン背景色 (赤系) */
     margin-left: 5px;
-    /* 時刻入力の右側に少し間隔 */
 }
 
 .btn-add-break:hover,
 .btn-remove-break:hover {
     opacity: 0.9;
-    /* ホバー時に少し透明にする */
 }
 
-/* 備考セクション */
 .remarks-item .item-label {
     align-self: flex-start;
-    /* 「備考」ラベルを上端に配置 */
     padding-top: 8px;
-    /* textareaのパディングに合わせて微調整 */
 }
 
-/* 修正申請ボタンコンテナ */
 .action-button-container {
     text-align: right;
     margin-top: 30px;
-    /* カードとの間隔 */
     margin-bottom: 20px;
 }
 
-/* 修正申請ボタン */
 .btn-submit-correction {
     background-color: #333;
-    /* ボタン背景色 (黒) */
     color: white;
     padding: 12px 30px;
-    /* パディング */
     border: none;
     border-radius: 4px;
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.2s;
-    /* ホバー時のアニメーション */
 }
 
 .btn-submit-correction:hover {
     background-color: #555;
-    /* ホバー時の背景色 */
 }
 
-/* 承認待ちメッセージ */
 .correction-pending-message {
     color: red;
     font-weight: bold;
     text-align: right;
     padding: 10px;
     border-radius: 4px;
-    /* 必要に応じて背景色や枠線を追加 */
-    /* background-color: #ffebee; */
-    /* border: 1px solid red; */
 }
 
-/* 戻るボタンコンテナ */
 .back-link-container {
     text-align: right;
     margin-top: 15px;
 }
 
-/* 戻るボタン */
 .btn-back {
     display: inline-block;
     padding: 8px 20px;
     background-color: #6c757d;
-    /* ボタン背景色 (グレー系) */
     color: white;
     text-decoration: none;
-    /* リンクの下線を消す */
     border-radius: 4px;
     font-size: 0.9em;
 }
 
 .btn-back:hover {
     background-color: #5a6268;
-    /* ホバー時の背景色 */
 }
 
-/* アラートメッセージ (成功・エラー) */
+/* アラートメッセージ */
 .alert {
     padding: 10px 15px;
     margin-bottom: 20px;
@@ -285,15 +206,9 @@
     padding-left: 20px;
 }
 
-/* readonly属性のinputとtextareaの見た目を調整 */
 input[readonly],
 textarea[readonly] {
     background-color: #e9ecef;
-    /* disabled風の背景色 */
     color: #6c757d;
-    /* 少し薄い文字色 */
     cursor: not-allowed;
-    /* カーソル形状 */
-    /* border-color: #ced4da; */
-    /* 必要であれば境界線の色も変更 */
 }

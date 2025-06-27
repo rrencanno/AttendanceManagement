@@ -1,11 +1,9 @@
 .admin-staff-list-container {
     width: 90%;
     max-width: 900px;
-    /* 画像の幅に合わせる */
     margin: 30px auto;
     padding: 20px;
     background-color: #f0f2f5;
-    /* 背景色 */
 }
 
 .page-title {
@@ -22,11 +20,9 @@
     border-collapse: collapse;
     background-color: #fff;
     border: 1px solid #ddd;
-    /* テーブル全体の枠線 */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border-radius: 6px;
     overflow: hidden;
-    /* 角丸を効かせるため */
 }
 
 .staff-table th,
@@ -34,13 +30,11 @@
     border-bottom: 1px solid #e0e0e0;
     padding: 12px 15px;
     text-align: left;
-    /* 基本は左寄せ */
     font-size: 0.95em;
     vertical-align: middle;
 }
 
 .staff-table th:last-child,
-/* 月次勤怠のヘッダーと詳細ボタン列は中央寄せ */
 .staff-table td:last-child {
     text-align: center;
 }

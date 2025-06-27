@@ -5,13 +5,13 @@
 @endsection
 
 @section('content')
-<div class="register-page-container"> {{-- ページ全体のコンテナ --}}
-    <div class="register-form-wrapper"> {{-- フォーム入力欄のラッパー --}}
+<div class="register-page-container">
+    <div class="register-form-wrapper">
         <div class="register-header">
             <h2>会員登録</h2>
         </div>
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register') }}" novalidate>
             @csrf
 
             <div class="form-group">

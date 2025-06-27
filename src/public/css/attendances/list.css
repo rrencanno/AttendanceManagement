@@ -1,49 +1,48 @@
 .attendance-list-container {
     width: 90%;
-    max-width: 1000px; /* 画像の幅に合わせる */
+    max-width: 1000px;
     margin: 30px auto;
     padding: 20px;
-    background-color: #f9f9f9; /* 背景色を少し明るく */
+    background-color: #f9f9f9;
     border-radius: 8px;
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */ /* 必要であれば影 */
 }
 
 .month-navigation {
     display: flex;
-    justify-content: center; /* 中央寄せ */
+    justify-content: center;
     align-items: center;
     margin-bottom: 25px;
-    background-color: #fff; /* ナビゲーション背景 */
-    padding: 15px 0; /* 上下パディング */
-    border: 1px solid #ddd; /* 枠線 */
+    background-color: #fff;
+    padding: 15px 0;
+    border: 1px solid #ddd;
     border-radius: 6px;
 }
 
 .current-month {
-    font-size: 1.4em; /* 月の表示を大きく */
+    font-size: 1.4em;
     font-weight: bold;
-    margin: 0 30px; /* 前後ボタンとの間隔 */
+    margin: 0 30px;
     color: #333;
 }
 
 .month-nav-button {
-    background-color: transparent; /* ボタン背景なし */
-    color: #007bff; /* ボタン文字色 (青系) */
+    background-color: transparent;
+    color: #007bff;
     border: none;
     padding: 8px 15px;
     text-decoration: none;
     font-size: 1em;
     cursor: pointer;
-    display: inline-flex; /* アイコンとテキストを横並び */
+    display: inline-flex;
     align-items: center;
-    gap: 5px; /* アイコンとテキストの間隔 */
+    gap: 5px;
 }
 .month-nav-button:hover {
     color: #0056b3;
     text-decoration: underline;
 }
 .month-nav-button i {
-    font-size: 0.9em; /* アイコンサイズ調整 */
+    font-size: 0.9em;
 }
 
 
@@ -51,34 +50,34 @@
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
-    border: 1px solid #ddd; /* テーブル全体の枠線 */
+    border: 1px solid #ddd;
 }
 
 .attendance-table th,
 .attendance-table td {
     border: 1px solid #e0e0e0;
-    padding: 12px 15px; /* パディングを少し広めに */
+    padding: 12px 15px;
     text-align: center;
     font-size: 0.95em;
 }
 
 .attendance-table th {
-    background-color: #f2f2f2; /* ヘッダー背景色 */
-    font-weight: 600; /* ヘッダー文字太さ */
+    background-color: #f2f2f2;
+    font-weight: 600;
     color: #333;
 }
 
 .attendance-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* 偶数行の背景色 */
+    background-color: #f9f9f9;
 }
 .attendance-table tbody tr:hover {
-    background-color: #f1f1f1; /* ホバー時の背景色 */
+    background-color: #f1f1f1;
 }
 
 .btn-detail {
     display: inline-block;
     padding: 6px 12px;
-    background-color: #5cb85c; /* 詳細ボタンの色 (緑系) */
+    background-color: #5cb85c;
     color: white;
     text-decoration: none;
     border-radius: 4px;

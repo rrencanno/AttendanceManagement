@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
-use App\Models\BreakModel; // BreakModelも使用 (休憩中のテストのため)
+use App\Models\BreakModel;
 use Carbon\Carbon;
 
 class StatusDisplayTest extends TestCase
@@ -35,8 +35,6 @@ class StatusDisplayTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSeeText('勤務外');
-        // より具体的に、特定の要素内に表示されているか確認する場合
-        // $response->assertSeeIn('.attendance-status-badge', '勤務外');
     }
 
     /**
@@ -47,10 +45,9 @@ class StatusDisplayTest extends TestCase
     {
         $user = $this->createAndLoginUser();
 
-        // 出勤状態のデータを作成
         Attendance::factory()->for($user)->create([
             'work_date' => Carbon::today()->toDateString(),
-            'clock_in_time' => Carbon::now()->subHour(), // 1時間前に出勤
+            'clock_in_time' => Carbon::now()->subHour(),
             'clock_out_time' => null,
         ]);
 
@@ -68,16 +65,14 @@ class StatusDisplayTest extends TestCase
     {
         $user = $this->createAndLoginUser();
 
-        // 出勤状態のデータを作成
         $attendance = Attendance::factory()->for($user)->create([
             'work_date' => Carbon::today()->toDateString(),
-            'clock_in_time' => Carbon::now()->subHours(2), // 2時間前に出勤
+            'clock_in_time' => Carbon::now()->subHours(2),
             'clock_out_time' => null,
         ]);
 
-        // 休憩開始状態のデータを作成
         BreakModel::factory()->for($attendance)->create([
-            'break_start_time' => Carbon::now()->subHour(), // 1時間前に休憩開始
+            'break_start_time' => Carbon::now()->subHour(),
             'break_end_time' => null,
         ]);
 
@@ -89,17 +84,16 @@ class StatusDisplayTest extends TestCase
 
     /**
      * @test
-     * 退勤済みの場合、勤怠ステータスが「退勤済」と表示されることを確認 (finished_today の場合)
+     * 退勤済みの場合、勤怠ステータスが「退勤済」と表示されることを確認
      */
     public function status_is_finished_today_when_clocked_out()
     {
         $user = $this->createAndLoginUser();
 
-        // 退勤状態のデータを作成
         Attendance::factory()->for($user)->create([
             'work_date' => Carbon::today()->toDateString(),
-            'clock_in_time' => Carbon::now()->subHours(8), // 8時間前に出勤
-            'clock_out_time' => Carbon::now()->subHour(),  // 1時間前に退勤
+            'clock_in_time' => Carbon::now()->subHours(8),
+            'clock_out_time' => Carbon::now()->subHour(),
         ]);
 
         $response = $this->get(route('attendances.index'));
@@ -111,7 +105,7 @@ class StatusDisplayTest extends TestCase
 
     /**
      * @test
-     * 休憩終了後、勤務中に戻る場合、勤怠ステータスが「出勤中」と表示されることを確認 (追加テスト)
+     * 休憩終了後、勤務中に戻る場合、勤怠ステータスが「出勤中」と表示されることを確認
      */
     public function status_is_working_after_break_ended()
     {

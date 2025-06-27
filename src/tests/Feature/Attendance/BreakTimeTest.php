@@ -21,7 +21,6 @@ class BreakTimeTest extends TestCase
         $user->markEmailAsVerified();
         $this->actingAs($user);
 
-        // 出勤状態にする
         $attendance = Attendance::factory()->for($user)->create([
             'work_date' => Carbon::today()->toDateString(),
             'clock_in_time' => Carbon::now()->subHour(),
@@ -49,8 +48,7 @@ class BreakTimeTest extends TestCase
         // 3. データベースに休憩開始記録が作成されたことを確認
         $this->assertDatabaseHas('breaks', [
             'attendance_id' => $attendance->id,
-            // 'break_start_time' は now() なので厳密な比較は難しいが、存在を確認
-            'break_end_time' => null, // 休憩終了はまだ
+            'break_end_time' => null,
         ]);
         $latestBreak = BreakModel::where('attendance_id', $attendance->id)->latest()->first();
         $this->assertNotNull($latestBreak->break_start_time);
@@ -73,13 +71,13 @@ class BreakTimeTest extends TestCase
         // 1. 最初の休憩を開始し、終了する
         BreakModel::factory()->for($attendance)->create([
             'break_start_time' => Carbon::now()->subMinutes(30),
-            'break_end_time' => Carbon::now()->subMinutes(15), // 既に終了
+            'break_end_time' => Carbon::now()->subMinutes(15),
         ]);
 
         // 2. 画面に「休憩入」ボタンが再度表示されることを確認
         $this->get(route('attendances.index'))
             ->assertOk()
-            ->assertSee('休憩入'); // 休憩終了していれば、また休憩開始ボタンが出るはず
+            ->assertSee('休憩入');
     }
 
     /**
@@ -107,7 +105,6 @@ class BreakTimeTest extends TestCase
         // 4. データベースの休憩記録が更新されたことを確認
         $this->assertDatabaseHas('breaks', [
             'id' => $break->id,
-            // 'break_end_time' が null でなくなったことを確認
         ]);
         $this->assertNotNull($break->fresh()->break_end_time);
 
@@ -134,7 +131,7 @@ class BreakTimeTest extends TestCase
 
         // 2. 再度休憩を開始する
         BreakModel::factory()->for($attendance)->create([
-            'break_start_time' => Carbon::now()->subMinutes(15), // 2回目の休憩開始
+            'break_start_time' => Carbon::now()->subMinutes(15),
             'break_end_time' => null,
         ]);
 
@@ -148,19 +145,18 @@ class BreakTimeTest extends TestCase
     /**
      * @test
      * 休憩時刻が勤怠一覧画面で確認できる
-     * (これはユーザー側の勤怠一覧画面 /attendances/list での確認を想定)
      */
     public function break_times_are_visible_on_user_attendance_list_page()
     {
         ['user' => $user, 'attendance' => $attendance] = $this->createAndLoginClockedInUser();
 
-        // $attendance->work_date から日付部分のみを取得 (Carbonインスタンスであることを期待)
-        $workDateCarbon = Carbon::parse($attendance->work_date); // 一度Carbonインスタンスとして確実に扱う
-        $dateString = $workDateCarbon->toDateString(); // YYYY-MM-DD 形式の文字列を取得
+        // $attendance->work_date から日付部分のみを取得
+        $workDateCarbon = Carbon::parse($attendance->work_date);
+        $dateString = $workDateCarbon->toDateString();
 
         // 1. 休憩を開始し、終了する
-        $breakStartTime = Carbon::parse($dateString . ' 12:00:00'); // 日付文字列と時刻文字列を結合
-        $breakEndTime = Carbon::parse($dateString . ' 13:00:00');   // 日付文字列と時刻文字列を結合
+        $breakStartTime = Carbon::parse($dateString . ' 12:00:00');
+        $breakEndTime = Carbon::parse($dateString . ' 13:00:00');
 
         BreakModel::factory()->for($attendance)->create([
             'break_start_time' => $breakStartTime,
@@ -168,13 +164,13 @@ class BreakTimeTest extends TestCase
         ]);
 
         // 2. 退勤処理も行う
-        $attendance->update(['clock_out_time' => Carbon::parse($dateString . ' 17:00:00')]); // 日付文字列と時刻文字列を結合
+        $attendance->update(['clock_out_time' => Carbon::parse($dateString . ' 17:00:00')]);
 
         // 3. 勤怠一覧画面にアクセス
         $response = $this->get(route('attendances.list'));
 
         $response->assertOk();
         $response->assertSeeText('休憩');
-        $response->assertSeeText('01:00'); // 合計休憩時間
+        $response->assertSeeText('01:00');
     }
 }

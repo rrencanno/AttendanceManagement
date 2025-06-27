@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
@@ -113,7 +112,7 @@ class CorrectionRequestManagementTest extends TestCase
             Carbon::parse($this->pendingRequest->attendance->work_date)->isoFormat('M月D日')
         ]);
         $response->assertSeeText($this->pendingRequest->requested_note); // 申請理由
-        // 申請された出勤時刻 (H:i 形式で表示されていることを期待)
+        // 申請された出勤時刻 (H:i 形式で表示されている)
         $response->assertSeeText(Carbon::parse($this->pendingRequest->requested_clock_in_time)->format('H:i'));
     }
 
@@ -123,11 +122,11 @@ class CorrectionRequestManagementTest extends TestCase
      */
     public function admin_can_approve_correction_request_and_data_is_updated()
     {
-        $originalAttendance = $this->pendingRequest->attendance; // 更新前の勤怠記録
+        $originalAttendance = $this->pendingRequest->attendance;
         $requestedNote = $this->pendingRequest->requested_note;
-        $requestedClockIn = $this->pendingRequest->requested_clock_in_time; // Carbonインスタンスのはず
-        $requestedClockOut = $this->pendingRequest->requested_clock_out_time; // nullかもしれない
-        $requestedBreaks = $this->pendingRequest->requested_break_details; // これは配列のはず
+        $requestedClockIn = $this->pendingRequest->requested_clock_in_time;
+        $requestedClockOut = $this->pendingRequest->requested_clock_out_time;
+        $requestedBreaks = $this->pendingRequest->requested_break_details;
 
         // 承認処理を実行
         $response = $this->post(route('admin.correction_requests.process', $this->pendingRequest->id), [
@@ -147,7 +146,7 @@ class CorrectionRequestManagementTest extends TestCase
         // 3. 勤怠レコード (Attendance) が申請内容で更新されたことを確認
         $updatedAttendance = $originalAttendance->fresh();
         $this->assertEquals(
-            Carbon::parse($requestedClockIn)->toDateTimeString(), // DBのdatetimeと比較
+            Carbon::parse($requestedClockIn)->toDateTimeString(),
             Carbon::parse($updatedAttendance->clock_in_time)->toDateTimeString()
         );
         if ($requestedClockOut) {

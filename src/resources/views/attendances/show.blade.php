@@ -87,7 +87,7 @@
                         </div>
                         @php $breakIndex++; @endphp
                     @empty
-                        {{-- コントローラで最低1つは $displayBreaks に入るようにしているので、ここは通らないはず --}}
+                        {{-- ここは通らないはずだが、念の為 --}}
                         <div class="break-time-group" data-index="0">
                              <input type="time" name="break_start_time[]" {{ $isPendingCorrection ? 'readonly' : '' }}>
                              <span class="time-separator">〜</span>

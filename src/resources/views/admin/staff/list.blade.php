@@ -24,7 +24,6 @@
                 <td>{{ $staff->name }}</td>
                 <td>{{ $staff->email }}</td>
                 <td>
-                    {{-- スタッフ別勤怠一覧へのリンク。当月をデフォルトとする --}}
                     <a href="{{ route('admin.attendances.list_by_staff', ['user' => $staff->id, 'month' => now()->format('Y-m')]) }}" class="btn-detail">
                         詳細
                     </a>

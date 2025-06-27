@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin\Attendance;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
@@ -31,7 +30,7 @@ class AdminAttendanceDetailTest extends TestCase
 
         // スタッフの勤怠データを作成
         $workDate = Carbon::parse('2023-09-20');
-        Carbon::setTestNow($workDate->copy()->hour(10)); // テスト時刻を固定
+        Carbon::setTestNow($workDate->copy()->hour(10));
 
         $this->staffAttendance = Attendance::factory()->for($this->staffUser)->create([
             'work_date' => $workDate->toDateString(),
@@ -60,7 +59,6 @@ class AdminAttendanceDetailTest extends TestCase
     // 修正データを準備するヘルパー
     private function validUpdateData(array $overrides = []): array
     {
-        // setUp で作成した勤怠データをベースに、有効な更新データを生成
         $baseData = [
             'clock_in_time' => Carbon::parse($this->staffAttendance->clock_in_time)->format('H:i'),
             'clock_out_time' => Carbon::parse($this->staffAttendance->clock_out_time)->format('H:i'),
@@ -84,17 +82,17 @@ class AdminAttendanceDetailTest extends TestCase
 
         // スタッフ名
         $response->assertSeeText($this->staffUser->name);
-        // 日付 (表示形式に注意)
+        // 日付
         $response->assertSee(Carbon::parse($this->staffAttendance->work_date)->isoFormat('YYYY年 M月D日'), false);
-        // 出勤・退勤時間 (inputのvalueで確認)
+        // 出勤・退勤時間
         $response->assertSee("value=\"" . Carbon::parse($this->staffAttendance->clock_in_time)->format('H:i') . "\"", false);
         $response->assertSee("value=\"" . Carbon::parse($this->staffAttendance->clock_out_time)->format('H:i') . "\"", false);
-        // 休憩時間 (inputのvalueで確認、複数ある場合も考慮)
+        // 休憩時間
         foreach ($this->staffAttendance->breaks as $break) {
             $response->assertSee("value=\"" . Carbon::parse($break->break_start_time)->format('H:i') . "\"", false);
             $response->assertSee("value=\"" . Carbon::parse($break->break_end_time)->format('H:i') . "\"", false);
         }
-        // 備考 (textareaの中身で確認)
+        // 備考
         $response->assertSeeText($this->staffAttendance->note);
     }
 
@@ -105,12 +103,10 @@ class AdminAttendanceDetailTest extends TestCase
     public function clock_in_time_after_clock_out_time_returns_validation_error_on_update()
     {
         $response = $this->put(route('admin.attendances.update', $this->staffAttendance->id), $this->validUpdateData([
-            'clock_in_time' => '19:00', // 退勤時間(18:15)より後
+            'clock_in_time' => '19:00',
             'clock_out_time' => '18:15',
         ]));
         $response->assertSessionHasErrors('clock_out_time');
-        // $errors = session('errors');
-        // $this->assertStringContainsString('出勤時間もしくは退勤時間が不適切な値です。', $errors->first('clock_out_time'));
     }
 
     /**
@@ -121,8 +117,8 @@ class AdminAttendanceDetailTest extends TestCase
     {
         $response = $this->put(route('admin.attendances.update', $this->staffAttendance->id), $this->validUpdateData([
             'clock_out_time' => '17:00',
-            'break_start_time' => ['18:00'], // 退勤時間(17:00)より後
-            'break_end_time' => ['19:00'],   // 整合性のためこちらも設定
+            'break_start_time' => ['18:00'],
+            'break_end_time' => ['19:00'],
         ]));
         $response->assertSessionHasErrors('break_start_time.0');
     }
@@ -136,7 +132,7 @@ class AdminAttendanceDetailTest extends TestCase
         $response = $this->put(route('admin.attendances.update', $this->staffAttendance->id), $this->validUpdateData([
             'clock_out_time' => '17:00',
             'break_start_time' => ['16:00'],
-            'break_end_time' => ['18:00'], // 退勤時間(17:00)より後
+            'break_end_time' => ['18:00'],
         ]));
         $response->assertSessionHasErrors('break_end_time.0');
     }
@@ -148,11 +144,9 @@ class AdminAttendanceDetailTest extends TestCase
     public function remarks_is_required_on_update()
     {
         $response = $this->put(route('admin.attendances.update', $this->staffAttendance->id), $this->validUpdateData([
-            'remarks' => '', // 備考を空にする
+            'remarks' => '',
         ]));
         $response->assertSessionHasErrors('remarks');
-        // $errors = session('errors');
-        // $this->assertEquals('備考を記入してください。', $errors->first('remarks'));
     }
 
     /**
@@ -197,7 +191,7 @@ class AdminAttendanceDetailTest extends TestCase
         $this->assertEquals($updateData['remarks'], $updatedAttendance->note);
 
         $this->assertCount(1, $updatedAttendance->breaks);
-        // 休憩時間の比較も同様に修正
+        // 休憩時間の比較
         $expectedBreakStart = Carbon::parse($workDateString . ' ' . $updateData['break_start_time'][0]);
         $this->assertTrue(
             $expectedBreakStart->eq(Carbon::parse($updatedAttendance->breaks[0]->break_start_time)),

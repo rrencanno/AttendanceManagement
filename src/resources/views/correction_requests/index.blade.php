@@ -37,9 +37,6 @@
                         <span class="status-badge status-pending">承認待ち</span>
                     @elseif ($request->status == 'approved')
                         <span class="status-badge status-approved">承認済み</span>
-                    @else
-                        {{-- 基本的には上記2つのどちらかになるはず --}}
-                        {{ ucfirst($request->status) }}
                     @endif
                 </td>
                 <td>{{ $request->attendance ? \Carbon\Carbon::parse($request->attendance->work_date)->isoFormat('YYYY/MM/DD') : 'N/A' }}</td>

@@ -17,12 +17,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 });
 
-// ログアウト処理 (参考: 通常ヘッダーなどに配置)
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
-// == User Routes (Authenticated & Verified) ==
+// ユーザー認証関連
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(AttendanceController::class)->prefix('attendances')->name('attendances.')->group(function () {
         Route::get('/', 'index')->name('index');
@@ -35,27 +34,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{attendance}/correction', 'requestCorrection')->name('request_correction');
     });
 
-    // Correction Request Routes (User)
     Route::controller(UserCorrectionRequestController::class)->prefix('correction-requests')->name('correction_requests.')->group(function () {
         Route::get('/', 'index')->name('index');
     });
 });
 
 // 管理者認証関連
-// == Admin Routes ==
 Route::prefix('admin')->name('admin.')->group(function () {
-
-    // Admin Authentication
     Route::controller(AdminLoginController::class)->group(function () {
         Route::get('/login', 'create')->name('login.create')->middleware('guest');
         Route::post('/login', 'store')->name('login.store')->middleware('guest');
         Route::post('/logout', 'destroy')->name('logout')->middleware('auth', 'admin.check');
     });
 
-    // Admin Authenticated & Checked Routes
     Route::middleware(['auth', 'admin.check'])->group(function () {
-
-        // Admin Attendance Management
         Route::controller(AdminAttendanceController::class)->prefix('attendances')->name('attendances.')->group(function () {
             Route::get('/list/{date?}', 'index')->name('list');
             Route::get('/{attendance}/show', 'show')->name('show');
@@ -64,13 +56,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/staff/{user}/{month}/export', 'exportCsvByStaff')->name('export_csv_by_staff');
         });
 
-        // Admin Staff Management
         Route::controller(StaffController::class)->prefix('staff')->name('staff.')->group(function () {
             Route::get('/list', 'index')->name('list');
-            // 他のスタッフ管理ルート (作成、編集、削除など)
         });
 
-        // Admin Correction Request Management
         Route::controller(AdminCorrectionRequestController::class)->prefix('correction-requests')->name('correction_requests.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/{correction_request}/approve', 'showApprovalForm')->name('show_approval_form');

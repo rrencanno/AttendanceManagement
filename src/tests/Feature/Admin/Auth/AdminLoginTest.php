@@ -5,7 +5,7 @@ namespace Tests\Feature\Admin\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\User; // Userモデルを使用
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class AdminLoginTest extends TestCase
@@ -23,10 +23,10 @@ class AdminLoginTest extends TestCase
         // テスト用の管理者ユーザーを作成
         $this->adminUser = User::factory()->create([
             'is_admin' => true,
-            'password' => 'password123', // 平文のパスワード (モデル側でハッシュ化される想定)
+            'password' => 'password123', // 平文のパスワード (モデル側でハッシュ化される)
         ]);
 
-        // テスト用の一般ユーザーを作成 (管理者権限がないことをテストするため)
+        // テスト用の一般ユーザーを作成
         $this->normalUser = User::factory()->create([
             'is_admin' => false,
             'password' => 'password123',
@@ -56,7 +56,6 @@ class AdminLoginTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('email');
-        // 具体的なメッセージは Admin/Auth/LoginRequest.php の messages() メソッドで定義
     }
 
     /**
@@ -84,11 +83,7 @@ class AdminLoginTest extends TestCase
             'password' => 'password123',
         ]);
 
-        // AdminLoginController@store のエラーメッセージに依存
         $response->assertSessionHasErrors('email');
-        // エラーメッセージの文言を確認する場合
-        // $errors = session('errors');
-        // $this->assertEquals('メールアドレスまたはパスワードが正しくありません。', $errors->first('email'));
     }
 
     /**
@@ -102,6 +97,7 @@ class AdminLoginTest extends TestCase
             'password' => 'wrong-password',
         ]);
 
+        // Fortifyのセキュリティ上の標準的な動作のため、('email')を返す
         $response->assertSessionHasErrors('email');
     }
 
@@ -116,10 +112,7 @@ class AdminLoginTest extends TestCase
             'password' => 'password123', // 一般ユーザーの正しいパスワード
         ]);
 
-        // AdminLoginController@store で '管理者権限がありません。' というエラーを返す想定
         $response->assertSessionHasErrors('email');
-        // $errors = session('errors');
-        // $this->assertEquals('管理者権限がありません。', $errors->first('email'));
         $this->assertGuest(); // ログインできていないことを確認
     }
 
@@ -147,8 +140,7 @@ class AdminLoginTest extends TestCase
         $this->actingAs($this->adminUser); // 管理者としてログイン状態にする
 
         $response = $this->get(route('admin.login.create'));
-        // guest ミドルウェアにより、管理者用ホームページ (例: admin.attendances.list) へリダイレクトされることを期待
-        // 注意: RedirectIfAuthenticated ミドルウェアのリダイレクト先が管理者用になっているか確認
+        // guest ミドルウェアにより、管理者用ホームページ (例: admin.attendances.list) へリダイレクトされる
         $response->assertRedirect(route('admin.attendances.list'));
     }
 

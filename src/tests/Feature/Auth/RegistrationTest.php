@@ -9,8 +9,8 @@ use App\Models\User;
 
 class RegistrationTest extends TestCase
 {
-    use RefreshDatabase; // データベースをリフレッシュ
-    use WithFaker;       // Faker を有効化
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * @test
@@ -18,18 +18,14 @@ class RegistrationTest extends TestCase
      */
     public function name_is_required_for_registration()
     {
-        $response = $this->post(route('register'), [ // Fortifyの登録ルートを想定
-            'name' => '', // 名前を空にする
+        $response = $this->post(route('register'), [
+            'name' => '',
             'email' => $this->faker->unique()->safeEmail,
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
         $response->assertSessionHasErrors('name');
-        // エラーメッセージの具体的な文言もテストしたい場合は、言語ファイルの設定に依存
-        // Session::get('errors')->first('name') でメッセージを取得してアサート可能
-        // 例: $this->assertEquals('お名前を入力してください。', Session::get('errors')->first('name'));
-        // ただし、メッセージは変更される可能性があるので、キーの存在確認が無難
     }
 
     /**
@@ -40,7 +36,7 @@ class RegistrationTest extends TestCase
     {
         $response = $this->post(route('register'), [
             'name' => $this->faker->name,
-            'email' => '', // メールアドレスを空にする
+            'email' => '',
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
@@ -50,7 +46,7 @@ class RegistrationTest extends TestCase
 
     /**
      * @test
-     * メールアドレスが不正な形式の場合にバリデーションエラーが表示されることを確認 (追加テスト)
+     * メールアドレスが不正な形式の場合にバリデーションエラーが表示されることを確認
      */
     public function email_must_be_a_valid_email_address()
     {
@@ -66,7 +62,7 @@ class RegistrationTest extends TestCase
 
     /**
      * @test
-     * メールアドレスが既に存在する場合にバリデーションエラーが表示されることを確認 (追加テスト)
+     * メールアドレスが既に存在する場合にバリデーションエラーが表示されることを確認
      */
     public function email_must_be_unique()
     {
@@ -91,7 +87,7 @@ class RegistrationTest extends TestCase
         $response = $this->post(route('register'), [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
-            'password' => '', // パスワードを空にする
+            'password' => '',
             'password_confirmation' => '',
         ]);
 
@@ -128,8 +124,6 @@ class RegistrationTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('password');
-        // 具体的なエラーメッセージキーは 'confirmed' (password_confirmation が password と一致しない場合)
-        // $response->assertSessionHasErrors(['password' => 'パスワードとパスワード（確認用）が一致しません。']); // もし言語ファイルで設定したメッセージをテストする場合
     }
 
 
@@ -152,26 +146,22 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => $userData['name'],
             'email' => $userData['email'],
-            // パスワードはハッシュ化されるため、直接比較はしない
         ]);
 
         // ユーザーが認証されたことを確認
         $this->assertAuthenticated();
 
-        // 適切な場所にリダイレクトされることを確認
-        // (Fortifyのデフォルトは config('fortify.home')、メール認証が有効なら /email/verify へ)
-        // 今回は /email/verify へリダイレクトされることを期待
-        $response->assertRedirect(config('fortify.home')); // または config('fortify.home')
+        $response->assertRedirect(config('fortify.home'));
     }
 
     /**
      * @test
-     * 登録ページが正しく表示されることを確認 (追加テスト)
+     * 登録ページが正しく表示されることを確認
      */
     public function registration_page_can_be_rendered()
     {
         $response = $this->get(route('register'));
         $response->assertStatus(200);
-        $response->assertViewIs('auth.register'); // Fortifyのデフォルトビュー名か、カスタマイズしたビュー名
+        $response->assertViewIs('auth.register');
     }
 }

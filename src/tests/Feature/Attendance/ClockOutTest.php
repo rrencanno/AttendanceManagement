@@ -27,7 +27,7 @@ class ClockOutTest extends TestCase
     {
         return Attendance::factory()->for($user)->create([
             'work_date' => Carbon::today()->toDateString(),
-            'clock_in_time' => Carbon::now()->subHour(), // 1時間前に出勤
+            'clock_in_time' => Carbon::now()->subHour(),
             'clock_out_time' => null,
         ]);
     }
@@ -44,7 +44,7 @@ class ClockOutTest extends TestCase
         // 1. 画面に「退勤」ボタンが表示されていることを確認
         $this->get(route('attendances.index'))
             ->assertOk()
-            ->assertSee('退勤'); // ボタンのテキストを確認
+            ->assertSee('退勤');
 
         // 2. 退勤処理を行う
         $response = $this->post(route('attendances.clockout'));
@@ -53,7 +53,6 @@ class ClockOutTest extends TestCase
         $this->assertDatabaseHas('attendances', [
             'id' => $attendance->id,
             'user_id' => $user->id,
-            // 'clock_out_time' が null でなくなったことを確認
         ]);
         $this->assertNotNull($attendance->fresh()->clock_out_time);
 
@@ -68,7 +67,6 @@ class ClockOutTest extends TestCase
     /**
      * @test
      * 休憩中に退勤しようとするとエラーメッセージが表示され、退勤できないことを確認
-     * (AttendanceController@clockOut のロジックに依存)
      */
     public function user_cannot_clock_out_if_on_break()
     {
@@ -86,7 +84,7 @@ class ClockOutTest extends TestCase
 
         // AttendanceController@clockOut で休憩中の場合にエラーメッセージと共にリダイレクトされることを確認
         $response->assertRedirect(route('attendances.index'));
-        $response->assertSessionHas('error', '休憩中です。先に休憩を終了してください。'); // コントローラーのエラーメッセージを確認
+        $response->assertSessionHas('error', '休憩中です。先に休憩を終了してください。');
 
         // 退勤時刻が記録されていないことを確認
         $this->assertNull($attendance->fresh()->clock_out_time);
@@ -120,7 +118,6 @@ class ClockOutTest extends TestCase
         $this->assertNotNull($updatedAttendance, 'Attendance record not found after clock out.');
         $this->assertNotNull($updatedAttendance->clock_out_time, 'Clock-out time is not recorded.');
 
-        // clock_out_time が Carbon インスタンスとして解釈できることを確認
         $this->assertInstanceOf(Carbon::class, Carbon::parse($updatedAttendance->clock_out_time));
 
         // 記録された退勤時刻が、処理実行時の時刻の範囲内にあることを確認 (数秒の誤差を許容)
@@ -140,14 +137,14 @@ class ClockOutTest extends TestCase
     {
         $this->createAndLoginVerifiedUser(); // 出勤データは作成しない
 
-        // 画面に「退勤」ボタンが表示されないことを確認 (Bladeのロジックによる)
+        // 画面に「退勤」ボタンが表示されないことを確認
         $this->get(route('attendances.index'))
             ->assertOk()
             ->assertDontSee('退勤');
 
-        // (オプション) 直接退勤処理を試みた場合のエラーハンドリングもテスト
+        // 直接退勤処理を試みた場合のエラーもテスト
         $response = $this->post(route('attendances.clockout'));
-        $response->assertRedirect(route('attendances.index')); // リダイレクトされる
-        $response->assertSessionHas('error'); // 何らかのエラーメッセージがあることを期待
+        $response->assertRedirect(route('attendances.index'));
+        $response->assertSessionHas('error');
     }
 }

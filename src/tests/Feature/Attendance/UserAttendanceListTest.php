@@ -34,7 +34,7 @@ class UserAttendanceListTest extends TestCase
 
         // 今月の勤怠データを3件作成
         $attendancesThisMonth = Attendance::factory()->count(3)->for($user)->create([
-            'work_date' => Carbon::today()->subDays(rand(0, Carbon::today()->day -1)), // 今月内のランダムな日
+            'work_date' => Carbon::today()->subDays(rand(0, Carbon::today()->day -1)),
         ]);
         // 他のユーザーの今月の勤怠データ
         Attendance::factory()->for($otherUser)->create(['work_date' => Carbon::today()]);
@@ -46,12 +46,12 @@ class UserAttendanceListTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('attendances.list');
 
-        // 自分の今月の勤怠データが表示されていることを確認 (例: 日付で確認)
+        // 自分の今月の勤怠データが表示されていることを確認
         foreach ($attendancesThisMonth as $attendance) {
             $response->assertSeeText(Carbon::parse($attendance->work_date)->isoFormat('MM/DD(ddd)'));
         }
-        // 他のユーザーの勤怠データが表示されていないことを確認 (もし名前などで区別できるなら)
-        // $response->assertDontSeeText($otherUser->name); // テーブル構造による
+        // 他のユーザーの勤怠データが表示されていないことを確認
+        $response->assertDontSeeText($otherUser->name);
 
         // 先月の勤怠データが表示されていないことを確認
         $response->assertDontSeeText(Carbon::today()->subMonth()->startOfMonth()->isoFormat('MM/DD(ddd)'));
@@ -90,7 +90,7 @@ class UserAttendanceListTest extends TestCase
         // まず当月表示
         $this->get(route('attendances.list'));
 
-        // 「前月」リンクにアクセス (ルートのクエリパラメータを確認)
+        // 「前月」リンクにアクセス
         $response = $this->get(route('attendances.list', ['month' => $prevMonth->format('Y-m')]));
 
         $response->assertStatus(200);
@@ -102,13 +102,12 @@ class UserAttendanceListTest extends TestCase
     /**
      * @test
      * 「翌月」ボタンを押下した時に表示月の翌月の情報が表示される
-     * (注意: このテストは「前月」ボタンのテストと構造が似ています。「翌月」の情報が表示されることを確認します)
      */
     public function next_month_attendances_are_displayed_when_next_month_button_is_clicked()
     {
         $user = $this->createAndLoginVerifiedUser();
-        $today = Carbon::parse('2023-05-15'); // 固定の日付でテスト (翌月が存在するように)
-        Carbon::setTestNow($today); // 現在時刻を固定
+        $today = Carbon::parse('2023-05-15');
+        Carbon::setTestNow($today);
 
         $currentMonth = $today->copy();
         $nextMonth = $today->copy()->addMonth();
@@ -118,7 +117,7 @@ class UserAttendanceListTest extends TestCase
         // 翌月のデータ
         $attendanceNextMonth = Attendance::factory()->for($user)->create(['work_date' => $nextMonth->toDateString()]);
 
-        // まず当月表示 (固定した日付の月)
+        // まず当月表示
         $this->get(route('attendances.list', ['month' => $currentMonth->format('Y-m')]));
 
         // 「翌月」リンクにアクセス
@@ -152,7 +151,7 @@ class UserAttendanceListTest extends TestCase
         $detailResponse = $this->get(route('attendances.show', $attendance->id));
         $detailResponse->assertStatus(200);
         $detailResponse->assertViewIs('attendances.show');
-        // 詳細ページに特定の情報が表示されているか確認
+
         $detailResponse->assertSeeText($user->name);
         $detailResponse->assertSee(Carbon::parse($attendance->work_date)->year);
         $detailResponse->assertSee(Carbon::parse($attendance->work_date)->month);

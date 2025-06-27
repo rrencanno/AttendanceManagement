@@ -6,11 +6,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail; // Mailファサードを使用
-use Illuminate\Auth\Events\Registered; // Registeredイベント
-use Illuminate\Auth\Notifications\VerifyEmail; // VerifyEmail通知
-use Illuminate\Support\Facades\Notification; // Notificationファサード
-use Illuminate\Support\Facades\URL; // 署名付きURL生成のため
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
 class EmailVerificationTest extends TestCase
@@ -25,7 +25,6 @@ class EmailVerificationTest extends TestCase
     public function verification_email_is_sent_after_registration()
     {
         // Mailファサードをフェイクし、メールが実際に送信されないようにする
-        // 代わりに、送信されたメールをアサートできるようになる
         Mail::fake();
 
         $userData = [
@@ -39,22 +38,17 @@ class EmailVerificationTest extends TestCase
         $response = $this->post(route('register'), $userData);
 
         // 2. 認証メールが送信されたことをアサート
-        //    (実際には Registered イベントが発行され、リスナーがメールを送信する)
-        //    ここでは、特定のユーザーに VerifyEmail 通知が送信されたことを確認する
         $user = User::whereEmail($userData['email'])->first();
         $this->assertNotNull($user, 'User was not created.');
 
-        // Notificationファサードをフェイクして、特定の通知が送信されたか確認
+        // Notificationファサードをフェイクして、メールの通知が送信される
         Notification::fake();
 
-        // Registeredイベントを再度発行して通知送信をトリガーする (テストのため)
-        // または、コントローラー内の event(new Registered($user)) を信じる
-        // より直接的なテストは、SendEmailVerificationNotification リスナーをテストすること
-        event(new Registered($user)); // このイベントで VerifyEmail 通知が送られる
+        event(new Registered($user));
 
         Notification::assertSentTo(
             [$user], // 通知の受信者
-            VerifyEmail::class // 送信された通知のクラス
+            VerifyEmail::class // 送信された通知
         );
     }
 
@@ -74,7 +68,7 @@ class EmailVerificationTest extends TestCase
         $this->actingAs($user);
 
         // 1. メール認証誘導画面を表示する
-        $response = $this->get(route('verification.notice')); // /email/verify
+        $response = $this->get(route('verification.notice'));
 
         $response->assertStatus(200);
         // 2. 「認証はこちらから」ボタンが表示されていることを確認
@@ -95,9 +89,8 @@ class EmailVerificationTest extends TestCase
         $this->actingAs($user);
 
         // 1. 認証URLを生成
-        //    このURLは署名付きURLなので、URLファサードを使って生成する
         $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify', // ルート名
+            'verification.verify',
             Carbon::now()->addMinutes(config('auth.verification.expire', 60)), // 有効期限
             [ // ルートパラメータ
                 'id' => $user->getKey(),

@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
@@ -21,11 +20,9 @@ class StaffManagementTest extends TestCase
     {
         parent::setUp();
 
-        // 管理者ユーザーを作成しログイン
         $this->adminUser = User::factory()->admin()->create();
         $this->actingAs($this->adminUser);
 
-        // 一般スタッフユーザーを複数作成
         $this->staffUser1 = User::factory()->create(['name' => '山田 太郎', 'email' => 'taro@example.com']);
         $this->staffUser2 = User::factory()->create(['name' => '佐藤 花子', 'email' => 'hanako@example.com']);
     }
@@ -47,7 +44,7 @@ class StaffManagementTest extends TestCase
         $response->assertSeeText($this->staffUser2->name);
         $response->assertSeeText($this->staffUser2->email);
 
-        // 管理者自身の情報は表示されないことを確認 (StaffControllerのロジックによる)
+        // 管理者自身の情報は表示されないことを確認
         $response->assertDontSeeText($this->adminUser->name);
     }
 
@@ -64,7 +61,7 @@ class StaffManagementTest extends TestCase
             'clock_in_time' => $targetMonth->copy()->startOfMonth()->hour(9),
         ]);
 
-        // スタッフ一覧の「詳細」リンクにアクセス (当月指定)
+        // スタッフ一覧の「詳細」リンクにアクセス
         $response = $this->get(route('admin.attendances.list_by_staff', [
             'user' => $this->staffUser1->id,
             'month' => $targetMonth->format('Y-m')
@@ -103,8 +100,8 @@ class StaffManagementTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSeeText($prevMonth->format('Y / m'));
-        $response->assertSeeText(Carbon::parse($attendancePrevMonth->work_date)->isoFormat('MM/DD(ddd)')); // 先月のデータ
-        $response->assertDontSeeText($currentMonth->startOfMonth()->isoFormat('MM/DD(ddd)')); // 今月のデータは表示されない
+        $response->assertSeeText(Carbon::parse($attendancePrevMonth->work_date)->isoFormat('MM/DD(ddd)'));
+        $response->assertDontSeeText($currentMonth->startOfMonth()->isoFormat('MM/DD(ddd)'));
     }
 
     /**
@@ -113,9 +110,8 @@ class StaffManagementTest extends TestCase
      */
     public function next_month_staff_attendances_are_displayed()
     {
-        // テストしやすいように基準日を過去にする
         $baseDate = Carbon::parse('2023-05-15');
-        Carbon::setTestNow($baseDate); // 現在時刻を固定
+        Carbon::setTestNow($baseDate);
 
         $currentMonth = $baseDate->copy();
         $nextMonth = $baseDate->copy()->addMonth();
@@ -137,8 +133,8 @@ class StaffManagementTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSeeText($nextMonth->format('Y / m'));
-        $response->assertSeeText(Carbon::parse($attendanceNextMonth->work_date)->isoFormat('MM/DD(ddd)')); // 翌月のデータ
-        $response->assertDontSeeText($currentMonth->startOfMonth()->isoFormat('MM/DD(ddd)')); // 当月のデータは表示されない
+        $response->assertSeeText(Carbon::parse($attendanceNextMonth->work_date)->isoFormat('MM/DD(ddd)'));
+        $response->assertDontSeeText($currentMonth->startOfMonth()->isoFormat('MM/DD(ddd)'));
 
         Carbon::setTestNow(); // テスト時刻の固定を解除
     }
@@ -169,8 +165,8 @@ class StaffManagementTest extends TestCase
         // 実際に遷移して、管理者用詳細ページが表示されることを確認
         $detailResponse = $this->get(route('admin.attendances.show', $attendance->id));
         $detailResponse->assertStatus(200);
-        $detailResponse->assertViewIs('admin.attendances.show'); // 管理者用詳細ビュー
-        $detailResponse->assertSeeText($this->staffUser1->name); // スタッフ名
-        $detailResponse->assertSee(Carbon::parse($attendance->work_date)->isoFormat('YYYY年 M月D日'), false); // 日付
+        $detailResponse->assertViewIs('admin.attendances.show');
+        $detailResponse->assertSeeText($this->staffUser1->name);
+        $detailResponse->assertSee(Carbon::parse($attendance->work_date)->isoFormat('YYYY年 M月D日'), false);
     }
 }

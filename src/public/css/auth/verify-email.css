@@ -9,29 +9,16 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* 内容が少ないので中央に寄せる */
     min-height: calc(100vh - 56px);
-    /* ヘッダーの高さを引いた高さ (56pxは仮のヘッダー高さ) */
     padding: 40px 20px;
     box-sizing: border-box;
     text-align: center;
-    /* 全体的に中央揃え */
 }
 
 .verify-email-form-wrapper {
     width: 100%;
     max-width: 600px;
-    /* 少し幅を狭く */
     padding: 30px;
-    /* background-color: #f8f9fa; */
-    /* 画像では特に背景色はないのでコメントアウト */
-    /* border-radius: 8px; */
-    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
-}
-
-.verify-email-header {
-    margin-bottom: 20px;
-    /* メッセージとの間隔 */
 }
 
 .message-area {
@@ -51,7 +38,6 @@ body {
 }
 
 .mailhog-link-button .btn-mailhog {
-    /* 「認証はこちらから」ボタンのスタイル */
     display: inline-block;
     padding: 12px 24px;
     font-size: 16px;
@@ -70,7 +56,6 @@ body {
 }
 
 .resend-button .btn-link {
-    /* 「認証メールを再送する」リンク風ボタン */
     color: #007bff;
     text-decoration: underline;
     background: none;
@@ -84,15 +69,12 @@ body {
     color: #0056b3;
 }
 
-
-/* 汎用的なアラートメッセージのスタイル (任意、login.cssから流用可) */
 .alert {
     padding: .75rem 1.25rem;
     margin-bottom: 1rem;
     border: 1px solid transparent;
     border-radius: .25rem;
     text-align: left;
-    /* アラート内は左寄せ */
 }
 
 .alert-success {

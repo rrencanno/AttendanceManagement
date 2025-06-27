@@ -1,3 +1,9 @@
+body {
+    background-color: #f0f2f5;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 header {
     background-color: #000;
     color: white;
@@ -26,7 +32,6 @@ header {
     vertical-align: middle;
 }
 
-/* ログインユーザー向けナビゲーション */
 .header-nav ul {
     list-style: none;
     margin: 0;
@@ -109,7 +114,6 @@ header {
     border-color: #ddd;
 }
 
-/* 「<」「>」ボタンのデザイン */
 .pagination li:first-child a,
 .pagination li:first-child span,
 .pagination li:last-child a,
@@ -117,14 +121,12 @@ header {
     border-radius: 50%;
 }
 
-/* 現在のページのスタイル */
 .px-4.py-2.bg-blue-500.text-white.border.border-blue-500.rounded {
     background-color: #f5c800;
     color: white;
     border-color: #f5c800;
 }
 
-/* 「<」が無効（最初のページ）の場合 */
 .disabled {
     color: #999;
     border-color: #ddd;

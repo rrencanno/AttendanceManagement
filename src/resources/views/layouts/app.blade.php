@@ -13,13 +13,12 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                {{-- ログイン状態に関わらずトップページ (または勤怠画面) へリンクすることを推奨 --}}
                 <a href="{{ Auth::check() ? route('attendances.index') : url('/') }}" class="logo-link">
                     <img src="{{ asset('storage/logo.svg') }}" alt="COACHTECHロゴ">
                 </a>
             </div>
 
-            @auth {{-- ログインしている場合 --}}
+            @auth
             <nav class="header-nav">
                 <ul>
                     <li><a href="{{ route('attendances.index') }}" class="nav-link">勤怠</a></li>

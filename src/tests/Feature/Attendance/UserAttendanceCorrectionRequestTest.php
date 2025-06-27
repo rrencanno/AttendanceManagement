@@ -3,12 +3,11 @@
 namespace Tests\Feature\Attendance;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Foundation\Testing\WithFaker; // 必要に応じて
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakModel;
-use App\Models\AttendanceCorrectionRequest; // 申請モデル
+use App\Models\AttendanceCorrectionRequest;
 use Carbon\Carbon;
 
 class UserAttendanceCorrectionRequestTest extends TestCase
@@ -66,8 +65,7 @@ class UserAttendanceCorrectionRequestTest extends TestCase
             'clock_out_time' => '18:00',
         ]));
 
-        $response->assertSessionHasErrors('clock_out_time'); // FormRequestのカスタムルールで clock_out_time にエラーが出る
-        // $response->assertSessionHasErrors(['clock_out_time' => '出勤時間もしくは退勤時間が不適切な値です。']); // メッセージ確認
+        $response->assertSessionHasErrors('clock_out_time');
     }
 
     /**
@@ -81,10 +79,8 @@ class UserAttendanceCorrectionRequestTest extends TestCase
             'break_start_time' => ['18:00'], // 退勤時間(17:00)より後
             'break_end_time' => ['19:00'],
         ]));
-        // FormRequest の break_start_time.* のカスタムルールで設定したメッセージを期待
+
         $response->assertSessionHasErrors('break_start_time.0');
-        // $errors = session('errors')->get('break_start_time.0');
-        // $this->assertContains('休憩時間が勤務時間外です。', $errors);
     }
 
     /**
@@ -109,11 +105,10 @@ class UserAttendanceCorrectionRequestTest extends TestCase
     public function requested_note_is_required()
     {
         $response = $this->post(route('attendances.request_correction', $this->attendance->id), $this->validCorrectionData([
-            'requested_note' => '', // 備考を空にする
+            'requested_note' => '',
         ]));
 
         $response->assertSessionHasErrors('requested_note');
-        // $response->assertSessionHasErrors(['requested_note' => '備考を記入してください。']);
     }
 
     /**
@@ -137,10 +132,9 @@ class UserAttendanceCorrectionRequestTest extends TestCase
             'user_id' => $this->user->id,
             'requested_note' => $correctionData['requested_note'],
             'status' => 'pending',
-            // 時刻はDB保存時に Carbon インスタンスに変換されるので、文字列比較は注意
         ]);
         $createdRequest = AttendanceCorrectionRequest::latest()->first();
-        $workDateString = Carbon::parse($this->attendance->work_date)->toDateString(); // 念のため work_date から日付文字列を取得
+        $workDateString = Carbon::parse($this->attendance->work_date)->toDateString();
         $this->assertEquals(
             Carbon::parse($workDateString . ' ' . $correctionData['clock_in_time'])->toDateTimeString(),
             Carbon::parse($createdRequest->requested_clock_in_time)->toDateTimeString()
@@ -150,19 +144,16 @@ class UserAttendanceCorrectionRequestTest extends TestCase
         $response->assertRedirect(route('attendances.show', $this->attendance->id));
         $response->assertSessionHas('status', '勤怠修正を申請しました。');
 
-        // 4. 申請一覧画面を開き、「承認待ち」に今作成した申請が表示されていることを確認
-        // (ユーザー側の申請一覧画面を想定)
+        // 4. ユーザー側の申請一覧画面を開き、「承認待ち」に今作成した申請が表示されていることを確認
         $listResponse = $this->get(route('correction_requests.index', ['status' => 'pending']));
         $listResponse->assertOk();
-        $listResponse->assertSeeText($correctionData['requested_note']); // 申請理由が表示されているか
-        $listResponse->assertSeeText(Carbon::parse($this->attendance->work_date)->isoFormat('YYYY/MM/DD')); // 対象日時
+        $listResponse->assertSeeText($correctionData['requested_note']);
+        $listResponse->assertSeeText(Carbon::parse($this->attendance->work_date)->isoFormat('YYYY/MM/DD'));
     }
 
     /**
      * @test
      * 「承認済み」に管理者が承認した修正申請が表示される
-     * (このテストは管理者の承認アクションをシミュレートする必要があり複雑。
-     *  ここでは、DBで承認済みに変更して表示されるかを確認する簡易版)
      */
     public function approved_correction_request_is_shown_in_approved_list()
     {
@@ -179,7 +170,6 @@ class UserAttendanceCorrectionRequestTest extends TestCase
         $response = $this->get(route('correction_requests.index', ['status' => 'approved']));
 
         $response->assertOk();
-        // 期待するテキストが指定した「テスト申請（承認済み確認用）」であることを確認
         $response->assertSeeText('テスト申請（承認済み確認用）');
         $response->assertSeeText('承認済み');
     }
@@ -187,7 +177,6 @@ class UserAttendanceCorrectionRequestTest extends TestCase
     /**
      * @test
      * 各申請の「詳細」を押下すると申請詳細画面（ユーザーの勤怠詳細画面）に遷移する
-     * (この要件はユーザー側の申請一覧から勤怠詳細に戻る動きを指していると解釈)
      */
     public function clicking_detail_on_correction_request_list_goes_to_attendance_detail()
     {
@@ -204,14 +193,11 @@ class UserAttendanceCorrectionRequestTest extends TestCase
         $response->assertOk();
 
         // 3. 「詳細」ボタンのリンク先が正しい勤怠詳細画面であることを確認し、遷移する
-        // BladeテンプレートのHTML構造に依存するため、assertSeeでリンクの存在を確認する方が良い場合もある
         $response->assertSee(route('attendances.show', $this->attendance->id));
 
         // 実際に遷移してみる
         $detailResponse = $this->get(route('attendances.show', $this->attendance->id));
         $detailResponse->assertOk();
-        $detailResponse->assertViewIs('attendances.show'); // 勤怠詳細画面のビュー
-        // (オプション) 申請状況が画面に反映されているか（例：「承認待ちのため修正できません」）
-        // $detailResponse->assertSeeText('承認待ちのため修正できません');
+        $detailResponse->assertViewIs('attendances.show');
     }
 }

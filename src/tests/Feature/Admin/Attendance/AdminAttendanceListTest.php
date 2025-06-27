@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin\Attendance;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Foundation\Testing\WithFaker; // 必要に応じて
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
@@ -50,8 +49,6 @@ class AdminAttendanceListTest extends TestCase
             'clock_in_time' => $targetDate->copy()->hour(10)->minute(0),
             'clock_out_time' => null, // 勤務中
         ]);
-        // 管理者自身の今日の勤怠（表示対象外のはずだが、念のため作成）
-        Attendance::factory()->for($this->adminUser)->create(['work_date' => $targetDate->toDateString()]);
         // 昨日の勤怠 (表示されないはず)
         Attendance::factory()->for($this->staffUser1)->create(['work_date' => $targetDate->copy()->subDay()->toDateString()]);
 
@@ -70,9 +67,6 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSeeText($this->staffUser2->name);
         $response->assertSeeText(Carbon::parse($attendance2->clock_in_time)->format('H:i'));
         $response->assertDontSeeText(Carbon::parse($targetDate->copy()->subDay()->toDateString())->isoFormat('MM/DD(ddd)')); // 昨日の日付は表示されない
-
-        // (オプション) 管理者自身の勤怠は通常この一覧には不要なので、表示されていないことを確認しても良い
-        // $response->assertDontSeeText($this->adminUser->name); // テーブルの設計による
     }
 
     /**
@@ -81,12 +75,12 @@ class AdminAttendanceListTest extends TestCase
      */
     public function current_date_is_displayed_on_initial_load_of_admin_attendance_list()
     {
-        $response = $this->get(route('admin.attendances.list')); // 日付指定なし
+        $response = $this->get(route('admin.attendances.list'));
 
         $response->assertStatus(200);
-        // Bladeテンプレートのタイトルや日付ナビゲーションの表示形式に合わせる
-        $expectedDateString = Carbon::today()->isoFormat('YYYY年M月D日'); // タイトル用
-        $expectedNavDateString = Carbon::today()->toDateString();      // ナビゲーションの日付ピッカー用
+
+        $expectedDateString = Carbon::today()->isoFormat('YYYY年M月D日');
+        $expectedNavDateString = Carbon::today()->toDateString();
         $response->assertSeeText($expectedDateString);
         $response->assertSee("value=\"{$expectedNavDateString}\"", false);
     }
@@ -154,7 +148,6 @@ class AdminAttendanceListTest extends TestCase
     /**
      * @test
      * 管理者勤怠一覧の「詳細」を押下すると、その勤怠の管理者用詳細画面に遷移する
-     * (このテストは、admin.attendances.show ルートとそのビューが機能することを前提とする)
      */
     public function admin_can_navigate_to_admin_attendance_detail_page()
     {
@@ -173,7 +166,7 @@ class AdminAttendanceListTest extends TestCase
         // 実際に遷移して、管理者用詳細ページが表示されることを確認
         $detailResponse = $this->get(route('admin.attendances.show', $attendance->id));
         $detailResponse->assertStatus(200);
-        $detailResponse->assertViewIs('admin.attendances.show'); // 管理者用詳細ビュー
+        $detailResponse->assertViewIs('admin.attendances.show');
         $detailResponse->assertSeeText($this->staffUser1->name);
         $expectedDateString = $targetDate->isoFormat('YYYY年 M月D日');
         $detailResponse->assertSee($expectedDateString, false); // HTMLエスケープなしで検索
