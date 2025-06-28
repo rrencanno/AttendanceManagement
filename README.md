@@ -94,14 +94,14 @@
 
 ### URL一覧とテスト用アカウント
 
--   **会員登録画面**: [http://localhost/register](http://localhost/register)
--   **ログイン画面（一般ユーザー）**: [http://localhost/login](http://localhost/login)
+-   **会員登録画面**: <a href="http://localhost/register" target="_blank" rel="noopener noreferrer">http://localhost/register</a>
+-   **ログイン画面（一般ユーザー）**: <a href="http://localhost/login" target="_blank" rel="noopener noreferrer">http://localhost/login</a>
     -   Email: `user1@example.com`
     -   Password: `password`
--   **ログイン画面（管理者）**: [http://localhost/admin/login](http://localhost/admin/login)
+-   **ログイン画面（管理者）**: <a href="http://localhost/admin/login" target="_blank" rel="noopener noreferrer">http://localhost/admin/login</a>
     -   Email: `admin@example.com`
     -   Password: `password`
--   **phpMyAdmin**: [http://localhost:8080](http://localhost:8080)
+-   **phpMyAdmin**: <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer">http://localhost:8080</a>
 
 ---
 
