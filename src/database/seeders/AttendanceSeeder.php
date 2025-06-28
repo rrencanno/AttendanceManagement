@@ -52,7 +52,6 @@ class AttendanceSeeder extends Seeder
                         $breakStartTime = $workDate->copy()->hour(12)->minute(0);
                         $breakEndTime = $workDate->copy()->hour(13)->minute(0);
 
-                        // 勤務時間内に収まっている場合のみ作成
                         if ($breakStartTime->gte($clockInTime) && $breakEndTime->lte($clockOutTime)) {
                             BreakModel::create([
                                 'attendance_id' => $attendance->id,
