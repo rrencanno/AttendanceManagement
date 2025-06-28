@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         // 一般ユーザー (10名作成)
         User::factory()->count(10)->create();
 
-        // 特定のテスト用一般ユーザー (ログインしやすいように)
+        // 特定のテスト用一般ユーザー
         User::factory()->create([
             'name' => '一般 花子',
             'email' => 'user1@example.com',

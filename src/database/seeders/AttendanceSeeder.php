@@ -49,7 +49,6 @@ class AttendanceSeeder extends Seeder
                 // 4. JSTで休憩時間を作成
                 if ($attendance->clock_out_time) {
                     if ($faker->boolean(90)) {
-                        // 12時台の休憩を生成
                         $breakStartTime = $workDate->copy()->hour(12)->minute(0);
                         $breakEndTime = $workDate->copy()->hour(13)->minute(0);
 
