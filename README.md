@@ -62,19 +62,15 @@
     ```bash
     php artisan key:generate
     ```
-5.  マイグレーションを実行してデータベースにテーブルを作成します。
+5.  マイグレーション、シーダーを実行します。
     ```bash
-    php artisan migrate
+    php artisan migrate:fresh --seed
     ```
-6.  シーダーを実行して初期データ（管理者、一般ユーザー、勤怠データ）を投入します。
-    ```bash
-    php artisan db:seed
-    ```
-7.  ストレージへのシンボリックリンクを作成します。
+6.  ストレージへのシンボリックリンクを作成します。
     ```bash
     php artisan storage:link
     ```
-8.  (任意) ユニットテスト・フィーチャーテストを実行する場合：
+7.  (任意) ユニットテスト・フィーチャーテストを実行する場合：
     ```bash
     php artisan test
     ```
@@ -83,10 +79,6 @@
     > ```bash
     > php artisan migrate:fresh --seed
     > ```
-9.  PHPコンテナから出ます。
-    ```bash
-    exit
-    ```
 
 ---
 
