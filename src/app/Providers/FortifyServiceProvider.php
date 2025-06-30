@@ -9,6 +9,8 @@ use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginViewResponse;
+use App\Http\Controllers\Auth\VerifyEmailController as CustomVerifyEmailController;
+use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -49,7 +51,9 @@ class FortifyServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             \Laravel\Fortify\Contracts\LogoutResponse::class,
-            \App\Http\Responses\CustomLogoutResponse::class
+            \App\Http\Responses\CustomLogoutResponse::class,
+            VerifyEmailController::class,
+            CustomVerifyEmailController::class
         );
     }
 }

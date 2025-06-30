@@ -273,9 +273,15 @@ class AttendanceController extends Controller
             $displayBreaks[] = (object)['start' => null, 'end' => null];
         }
 
+        $from = $request->input('from', 'list');
         $returnMonth = $request->input('return_month', Carbon::parse($attendance->work_date)->format('Y-m'));
 
-        return view('attendances.show', compact('attendance', 'displayBreaks', 'returnMonth'));
+        $backUrl = route('attendances.list', ['month' => $returnMonth]);
+        if ($from === 'requests') {
+            $backUrl = route('correction_requests.index');
+        }
+        
+        return view('attendances.show', compact('attendance', 'displayBreaks', 'backUrl'));
     }
 
     public function requestCorrection(UserCorrectionRequestStoreRequest $request, Attendance $attendance)

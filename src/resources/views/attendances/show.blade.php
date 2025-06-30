@@ -118,8 +118,8 @@
             @endif
         </div>
     </form>
-     <div class="back-link-container">
-        <a href="{{ route('attendances.list', ['month' => $returnMonth]) }}" class="btn btn-back">戻る</a>
+    <div class="back-link-container">
+        <a href="{{ $backUrl }}" class="btn btn-back">戻る</a>
     </div>
 </div>
 

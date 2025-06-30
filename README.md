@@ -47,6 +47,13 @@
     DB_PASSWORD=laravel_pass
     ```
 
+    ... (中略) ...
+
+    ↓↓↓ この行も修正・確認してください ↓↓↓
+    ```
+    MAIL_FROM_ADDRESS=noreply@example.com
+    ```
+
 3.  PHPの依存パッケージをインストールします。
     ```bash
     composer install

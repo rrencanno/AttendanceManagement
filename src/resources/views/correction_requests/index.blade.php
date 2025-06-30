@@ -44,7 +44,7 @@
                 <td>{{ \Carbon\Carbon::parse($request->created_at)->isoFormat('YYYY/MM/DD HH:mm') }}</td>
                 <td>
                     @if ($request->attendance)
-                        <a href="{{ route('attendances.show', $request->attendance_id) }}" class="btn-detail">詳細</a>
+                        <a href="{{ route('attendances.show', ['attendance' => $request->attendance_id, 'from' => 'requests']) }}" class="btn-detail">詳細</a>
                     @else
                         -
                     @endif
