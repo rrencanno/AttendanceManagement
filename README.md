@@ -1,5 +1,11 @@
 # 勤怠管理アプリ (Attendance Management System)
 
+![AttendanceManagement Screenshot1](./images/screenshot1.png)
+
+![AttendanceManagement Screenshot2](./images/screenshot2.png)
+
+![AttendanceManagement Screenshot3](./images/screenshot3.png)
+
 ## 概要
 
 このアプリケーションは、従業員の出退勤、休憩時間を記録・管理するための勤怠管理システムです。
@@ -112,4 +118,4 @@
 
 ## ER 図
 
-![Attendance](Attendance.png)
+![Attendance](./images/Attendance.png)
