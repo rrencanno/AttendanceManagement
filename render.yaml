@@ -1,7 +1,7 @@
 services:
   - type: web
     name: AttendanceManagement # Renderでのサービス名
-    env: php # ★★★ ここで「PHP環境を使う」と明示的に指定 ★★★
+    runtime: php
     plan: free # 無料プランを指定
     buildCommand: "composer install --optimize-autoloader --no-dev"
     startCommand: "vendor/bin/heroku-php-apache2 public/"
